@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} — Sa7bi{% endblock %}
+
+{% block content %}
+<style>
+  .gradient-text { background: linear-gradient(135deg, #ef4444 0%, #fca5a5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .product-image-container { background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.8)); }
+  .spec-item { transition: all 0.3s ease; }
+  .spec-item:hover { transform: translateX(4px); }
+  .review-card { transition: all 0.3s ease; }
+  .review-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(239, 68, 68, 0.1); }
+  .like-button { padding: 0.25rem 0.5rem; border-radius: 999px; }
+  .like-button:hover { background: rgba(239, 68, 68, 0.08); }
+  .like-button:active { transform: translateY(1px) scale(0.98); }
+  .like-icon { transition: transform 0.2s ease, filter 0.2s ease; }
+  .like-button:hover .like-icon { transform: scale(1.08); filter: drop-shadow(0 6px 10px rgba(239, 68, 68, 0.25)); }
+</style>
+
+<!-- Breadcrumb Navigation -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <nav class="flex items-center space-x-2 text-sm">
+    <a href="/" class="text-slate-400 hover:text-white transition-colors">Home</a>
+    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    <a href="{% url 'shop:shop_list' %}" class="text-slate-400 hover:text-white transition-colors">Shop</a>
+    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    <span class="text-white font-medium">{{ product.name }}</span>
+  </nav>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Product Image & Details -->
+    <div class="lg:col-span-2 space-y-8">
+      <!-- Product Image -->
+      <div class="product-image-container rounded-2xl p-8 border border-slate-700/50 backdrop-blur-sm shadow-2xl shadow-black/20">
+        <div class="w-full aspect-square overflow-hidden rounded-xl">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105">
+          {% else %}
+            <div class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-slate-500">
+              <svg class="w-24 h-24 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Product Description & Details -->
+      <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-sm shadow-2xl shadow-black/20">
+        <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          About This Product
+        </h2>
+        <p class="text-slate-300 leading-relaxed">{{ product.description|linebreaksbr }}</p>
+
+        <!-- Product Features -->
+        {% if product.description %}
+        <div class="mt-8 pt-8 border-t border-slate-700/50">
+          <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+            <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Key Features
+          </h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="spec-item flex items-start gap-3 p-4 bg-slate-800/60 rounded-lg border border-slate-700/30 hover:border-red-500/30">
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <div>
+                <p class="text-sm font-semibold text-white">Instant Delivery</p>
+                <p class="text-xs text-slate-400 mt-1">Start immediately after purchase</p>
+              </div>
+            </div>
+            <div class="spec-item flex items-start gap-3 p-4 bg-slate-800/60 rounded-lg border border-slate-700/30 hover:border-red-500/30">
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div>
+                <p class="text-sm font-semibold text-white">Verified Experts</p>
+                <p class="text-xs text-slate-400 mt-1">Trained pro players</p>
+              </div>
+            </div>
+            <div class="spec-item flex items-start gap-3 p-4 bg-slate-800/60 rounded-lg border border-slate-700/30 hover:border-red-500/30">
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m9.172-9.172a9 9 0 11-12.728 12.728 9 9 0 0112.728-12.728z"/></svg>
+              <div>
+                <p class="text-sm font-semibold text-white">24/7 Support</p>
+                <p class="text-xs text-slate-400 mt-1">Always available to help</p>
+              </div>
+            </div>
+            <div class="spec-item flex items-start gap-3 p-4 bg-slate-800/60 rounded-lg border border-slate-700/30 hover:border-red-500/30">
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div>
+                <p class="text-sm font-semibold text-white">Satisfaction Guaranteed</p>
+                <p class="text-xs text-slate-400 mt-1">100% quality assured</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-sm shadow-2xl shadow-black/20">
+        <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-2">
+          <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          Customer Reviews
+        </h3>
+
+        <!-- Rating Summary -->
+        <div class="grid md:grid-cols-2 gap-8 pb-8 border-b border-slate-700/50">
+          <!-- Overall Rating -->
+          <div>
+            <div class="flex items-baseline gap-3 mb-4">
+              <div class="text-5xl font-black gradient-text">{{ avg_rating|floatformat:1 }}</div>
+              <div class="text-slate-400">out of 5</div>
+            </div>
+            <div class="flex items-center gap-1 mb-2">
+              {% for i in "12345" %}
+                {% if forloop.counter <= avg_rating_rounded %}
+                  <svg class="w-5 h-5 fill-yellow-400" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.492 6.91l6.561-.955L10 0l2.947 5.955 6.561.955-4.753 4.635 1.123 6.545z"/></svg>
+                {% else %}
+                  <svg class="w-5 h-5 text-slate-600" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.492 6.91l6.561-.955L10 0l2.947 5.955 6.561.955-4.753 4.635 1.123 6.545z"/></svg>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <p class="text-sm text-slate-400">Based on <span class="text-white font-semibold">{{ reviews_count }}</span> review<span class="{% if reviews_count != 1 %}s{% endif %}"></span></p>
+          </div>
+
+          <!-- Rating Breakdown -->
+          <div class="space-y-3">
+            {% for row in rating_distribution %}
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-slate-300 w-8">{{ row.rating }}★</span>
+                <div class="flex-1 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 transition-all" style="width: {{ row.percent }}%;"></div>
+                </div>
+                <span class="text-sm text-slate-400 w-12 text-right">{{ row.count }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        {% if reviews_count == 0 %}
+          <div class="text-center py-12">
+            <svg class="w-12 h-12 text-slate-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2h-3l-4 4z"/></svg>
+            <p class="text-slate-400">No reviews yet. Be the first to review!</p>
+          </div>
+        {% else %}
+          <div class="space-y-4 pt-8">
+            {% for review in reviews.all %}
+              <div class="review-card bg-slate-800/60 border border-slate-700/50 rounded-lg p-5 hover:border-red-500/20">
+                <div class="flex items-start justify-between mb-3">
+                  <div>
+                    <p class="text-sm font-semibold text-white">{{ review.user.username }}</p>
+                    <p class="text-xs text-slate-500">{{ review.created_at|date:"M d, Y" }}</p>
+                  </div>
+                  <div class="flex gap-0.5">
+                    {% for _ in "12345" %}
+                      {% if forloop.counter <= review.rating %}
+                        <span class="text-yellow-400">★</span>
+                      {% else %}
+                        <span class="text-slate-600">★</span>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+                {% if review.comment %}
+                <p class="text-slate-300 text-sm mb-4">{{ review.comment }}</p>
+                {% endif %}
+                <div class="flex items-center gap-4">
+                  <form class="like-form" method="post" action="{% url 'shop:toggle_review_like' review.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="like-button flex items-center gap-2 text-sm {% if review.id in liked_review_ids %}text-red-500{% else %}text-slate-500 hover:text-red-500{% endif %} transition-colors" data-review-id="{{ review.id }}">
+                      <svg class="like-icon w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.343l-6.828-6.829a4 4 0 010-5.656z"/></svg>
+                      <span class="likes-count">{{ review.likes_count }}</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- Review Form -->
+        <div class="pt-8 border-t border-slate-700/50 mt-8">
+          {% if user.is_authenticated and can_review %}
+            <h4 class="text-lg font-bold text-white mb-6">Leave a Review</h4>
+            <form method="post" action="{% url 'shop:add_review' product.id %}" class="space-y-6" id="reviewForm">
+              {% csrf_token %}
+              
+              <!-- Star Rating -->
+              <div>
+                <label class="text-sm font-semibold text-white block mb-3">Your Rating *</label>
+                <div class="stars flex items-center gap-3" id="starWidget">
+                  {% for i in "12345" %}
+                    <button type="button" class="star-btn group relative w-8 h-8 flex items-center justify-center" data-value="{{ i }}">
+                      <svg class="w-8 h-8 text-slate-600 group-hover:text-yellow-400 group-hover:scale-110 transition-all" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.492 6.91l6.561-.955L10 0l2.947 5.955 6.561.955-4.753 4.635 1.123 6.545z"/></svg>
+                      <svg class="absolute inset-0 w-8 h-8 text-yellow-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.492 6.91l6.561-.955L10 0l2.947 5.955 6.561.955-4.753 4.635 1.123 6.545z"/></svg>
+                    </button>
+                  {% endfor %}
+                </div>
+                <input type="hidden" name="rating" id="ratingInput" value="5">
+              </div>
+
+              <!-- Comment -->
+              <div>
+                <label class="text-sm font-semibold text-white block mb-2">Comment (optional)</label>
+                <textarea name="comment" rows="4" placeholder="Share your experience..." class="w-full bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-slate-200 placeholder-slate-500 focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20 transition-all"></textarea>
+              </div>
+
+              <!-- Order Item Selection -->
+              {% if eligible_order_items|length == 1 %}
+                <input type="hidden" name="order_item" value="{{ eligible_order_items.0.id }}">
+              {% elif eligible_order_items|length > 1 %}
+                <div>
+                  <label class="text-sm font-semibold text-white block mb-2">Which purchase are you reviewing? *</label>
+                  <select name="order_item" class="w-full bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-slate-200 focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20 transition-all">
+                    {% for oi in eligible_order_items %}
+                      <option value="{{ oi.id }}">Order #{{ oi.order.order_id }} • {{ oi.quantity }}x • {{ oi.order.created_at|date:'M d, Y' }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              {% endif %}
+
+              <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-3 px-6 rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-lg shadow-red-500/20 hover:shadow-red-500/40">
+                Submit Review
+              </button>
+            </form>
+          {% elif user.is_authenticated and not can_review %}
+            <div class="bg-slate-800/40 border border-slate-700/30 rounded-lg p-6 text-center">
+              <p class="text-slate-400">You can only review items you've purchased. <a href="{% url 'shop:shop_list' %}" class="text-red-400 hover:text-red-300">Browse and purchase</a></p>
+            </div>
+          {% else %}
+            <div class="bg-slate-800/40 border border-slate-700/30 rounded-lg p-6 text-center">
+              <p class="text-slate-400"><a href="{% url 'shop:login' %}?next={{ request.path }}" class="text-red-400 hover:text-red-300 font-semibold">Login</a> to write a review</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Purchase Sidebar -->
+    <div class="lg:col-span-1">
+      <div class="sticky top-24 bg-gradient-to-br from-slate-800/60 to-slate-900/60 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-sm shadow-2xl shadow-black/20">
+        <!-- Product Name & Price -->
+        <div class="mb-8">
+          <h1 class="text-3xl font-black gradient-text mb-3">{{ product.name }}</h1>
+          <div class="text-4xl font-black text-white">${{ product.price }}</div>
+          <div class="mt-3 flex items-center gap-2">
+            {% if avg_rating > 0 %}
+              <div class="flex gap-1">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= avg_rating_rounded %}
+                    <svg class="w-4 h-4 fill-yellow-400" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.492 6.91l6.561-.955L10 0l2.947 5.955 6.561.955-4.753 4.635 1.123 6.545z"/></svg>
+                  {% else %}
+                    <svg class="w-4 h-4 text-slate-600" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.492 6.91l6.561-.955L10 0l2.947 5.955 6.561.955-4.753 4.635 1.123 6.545z"/></svg>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <span class="text-sm text-slate-400">({{ reviews_count }} reviews)</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3 mb-6">
+          <form method="POST" action="{% url 'shop:add_to_cart' product.id %}" class="w-full">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-3 px-6 rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-lg shadow-red-500/20 hover:shadow-red-500/40 flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              Add to Cart
+            </button>
+          </form>
+
+          <a href="{% url 'shop:checkout' %}" class="block w-full text-center bg-slate-700/60 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-all border border-slate-600/50 hover:border-red-500/30">
+            Buy Now
+          </a>
+        </div>
+
+        <!-- Wishlist Button -->
+        <div class="mb-6">
+          {% if user.is_authenticated %}
+            {% if in_wishlist %}
+              <form method="post" action="{% url 'shop:remove_from_wishlist' product.id %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full px-6 py-3 bg-slate-700/60 text-white font-bold rounded-lg hover:bg-red-500/20 hover:border-red-500/50 border border-slate-600/50 hover:border-red-500/50 transition-all flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5 fill-red-500" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  Remove from Wishlist
+                </button>
+              </form>
+            {% else %}
+              <form method="post" action="{% url 'shop:add_to_wishlist' product.id %}">
+                {% csrf_token %}
+                <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-lg shadow-pink-500/20 hover:shadow-pink-500/40 flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                  Add to Wishlist
+                </button>
+              </form>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'shop:login' %}?next={{ request.path }}" class="block w-full text-center px-6 py-3 bg-slate-700/60 text-white font-bold rounded-lg hover:bg-slate-700 transition-all border border-slate-600/50">
+              Login to add to Wishlist
+            </a>
+          {% endif %}
+        </div>
+
+        <!-- Product Info -->
+        <div class="pt-6 border-t border-slate-700/50 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-400">Category:</span>
+            <span class="text-sm font-semibold text-white">Gaming Services</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-400">Product ID:</span>
+            <span class="text-sm font-semibold text-white">{{ product.id }}</span>
+          </div>
+          {% if product.slug %}
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-slate-400">SKU:</span>
+              <span class="text-sm font-semibold text-white">{{ product.slug }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="mt-8 pt-6 border-t border-slate-700/50 space-y-3">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <span class="text-xs text-slate-300">Instant Delivery</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <span class="text-xs text-slate-300">Secure Payment</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <span class="text-xs text-slate-300">24/7 Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// AJAX like handling for review likes
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.like-form').forEach(function(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const url = form.action;
+      const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      }).then(r=>r.json()).then(data=>{
+        if(data.error){ alert(data.error); return }
+        const btn = form.querySelector('button');
+        const countSpan = form.querySelector('.likes-count');
+        if(countSpan) countSpan.textContent = data.likes_count;
+        if(data.liked){ 
+          btn.classList.remove('text-slate-500', 'hover:text-red-500'); 
+          btn.classList.add('text-red-500') 
+        } else { 
+          btn.classList.remove('text-red-500'); 
+          btn.classList.add('text-slate-500', 'hover:text-red-500') 
+        }
+      }).catch(()=>{ form.submit() })
+    })
+  })
+})
+</script>
+
+<script>
+// Enhanced star rating widget
+document.addEventListener('DOMContentLoaded', function(){
+  const starWidget = document.getElementById('starWidget');
+  const ratingInput = document.getElementById('ratingInput');
+  if(!starWidget || !ratingInput) return;
+  
+  const starBtns = starWidget.querySelectorAll('.star-btn');
+  
+  function setRating(r){
+    ratingInput.value = r;
+    starBtns.forEach(btn => {
+      const v = parseInt(btn.getAttribute('data-value'));
+      const filled = btn.querySelector('svg.text-yellow-400');
+      const empty = btn.querySelector('svg.text-slate-600');
+      
+      if(v <= r){ 
+        empty.classList.add('hidden');
+        filled.classList.remove('hidden');
+      } else { 
+        filled.classList.add('hidden');
+        empty.classList.remove('hidden');
+      }
+    })
+  }
+  
+  starBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      setRating(parseInt(btn.getAttribute('data-value')));
+    });
+    btn.addEventListener('mouseover', ()=> setRating(parseInt(btn.getAttribute('data-value'))));
+  });
+  
+  starWidget.addEventListener('mouseleave', ()=> setRating(parseInt(ratingInput.value) || 5));
+  
+  // Initialize with 5 stars
+  setRating(parseInt(ratingInput.value) || 5);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Join Discord — Sa7bi{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-dark-900 to-dark-800 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-2xl w-full text-center space-y-8">
+    <div class="mx-auto h-20 w-20 rounded-2xl bg-[#5865F2]/15 border border-[#5865F2]/40 flex items-center justify-center">
+      <svg class="w-10 h-10 text-[#8EA1FF]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3853-.3969-.8748-.6083-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8851 1.515.0699.0699 0 00-.032.0277C.5336 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0775.0105c.1202.099.246.1981.372.2914a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6061 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+      </svg>
+    </div>
+
+    <div>
+      <h1 class="text-4xl sm:text-5xl font-black gradient-text">Join Discord</h1>
+      <p class="text-gray-300 text-lg mt-4">
+        We open your order ticket inside our Discord server. Join the server, then confirm below.
+      </p>
+    </div>
+
+    <div class="glass rounded-2xl p-6 border border-primary/30 text-left">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div>
+          <p class="text-xs uppercase tracking-widest text-gray-500">Order ID</p>
+          <p class="text-lg font-semibold text-white">{{ order.order_id }}</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-widest text-gray-500">Status</p>
+          <p class="text-lg font-semibold text-white">Awaiting Discord</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-widest text-gray-500">Ticket</p>
+          <p class="text-lg font-semibold text-white">Pending</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{{ discord_invite_link }}" target="_blank"
+         class="inline-flex items-center justify-center px-8 py-4 bg-[#5865F2] rounded-xl font-bold text-lg shadow-lg shadow-[#5865F2]/40 hover:shadow-[#5865F2]/70 hover:-translate-y-0.5 transition-all duration-300">
+         <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3853-.3969-.8748-.6083-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8851 1.515.0699.0699 0 00-.032.0277C.5336 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0775.0105c.1202.099.246.1981.372.2914a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6061 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+        </svg>
+        Join Discord Server
+      </a>
+      {% if has_discord_id %}
+      <form method="post" class="inline-flex">
+        {% csrf_token %}
+        <button type="submit"
+                class="inline-flex items-center justify-center px-8 py-4 bg-dark-700 border border-primary/40 rounded-xl font-bold text-lg hover:bg-dark-600 transition-colors">
+          I've Joined
+        </button>
+      </form>
+      {% else %}
+      <form method="post" class="inline-flex flex-col sm:flex-row gap-3">
+        {% csrf_token %}
+        <input
+          type="text"
+          name="discord_id"
+          inputmode="numeric"
+          placeholder="Discord ID"
+          class="px-4 py-3 bg-dark-700 rounded-xl border border-dark-600 focus:border-primary focus:outline-none transition text-white"
+        >
+        <button type="submit"
+                class="inline-flex items-center justify-center px-8 py-4 bg-dark-700 border border-primary/40 rounded-xl font-bold text-lg hover:bg-dark-600 transition-colors">
+          I've Joined
+        </button>
+      </form>
+      <a href="{% url 'shop:discord_login' %}?next={{ request.path }}"
+         class="inline-flex items-center justify-center px-8 py-4 bg-dark-700 border border-primary/40 rounded-xl font-bold text-lg hover:bg-dark-600 transition-colors">
+        Connect Discord
+      </a>
+      {% endif %}
+    </div>
+
+    <p id="membership-status" class="text-sm text-gray-500" data-poll-url="{% url 'shop:join_discord_status' order.order_id %}">
+      After you join, we will auto-check your membership and open the ticket.
+    </p>
+  </div>
+</div>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(135deg, #ef4444 0%, #000000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+</style>
+
+<script>
+  const statusEl = document.getElementById('membership-status');
+  const pollUrl = statusEl?.dataset?.pollUrl;
+
+  if (pollUrl) {
+    let attempts = 0;
+    const maxAttempts = 90;
+
+    const pollMembership = async () => {
+      attempts += 1;
+      try {
+        const response = await fetch(pollUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const data = await response.json();
+
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+          return;
+        }
+
+        if (data.needs_discord_id) {
+          statusEl.textContent = 'Add your Discord ID above, then we will open the ticket.';
+        } else if (data.ok && data.is_member === false) {
+          statusEl.textContent = 'Waiting for you to join the Discord server...';
+        } else if (!data.ok) {
+          statusEl.textContent = 'Unable to verify membership yet. Retrying...';
+        } else {
+          statusEl.textContent = 'Membership verified. Creating your ticket now...';
+        }
+      } catch (error) {
+        statusEl.textContent = 'Checking membership...';
+      }
+
+      if (attempts < maxAttempts) {
+        setTimeout(pollMembership, 4000);
+      } else {
+        statusEl.textContent = 'Still waiting. If you already joined, click "I\'ve Joined".';
+      }
+    };
+
+    setTimeout(pollMembership, 2000);
+  }
+</script>
+{% endblock %}

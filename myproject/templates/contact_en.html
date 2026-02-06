@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Sa7bi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #ef4444;
+            --accent-dark: #991b1b;
+            --accent-light: #fca5a5;
+            --bg-dark: #0a0a0f;
+            --bg-dark-secondary: #12121a;
+        }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-dark-secondary) 100%);
+            transition: background-color 0.3s ease;
+        }
+
+        /* Dot Background Pattern */
+        .bg-dots {
+            background-image: 
+                radial-gradient(circle, rgba(239, 68, 68, 0.15) 1px, transparent 1px),
+                radial-gradient(circle, rgba(239, 68, 68, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px, 100px 100px;
+            background-position: 0 0, 25px 25px;
+            position: relative;
+        }
+
+        /* Animated gradient glow */
+        .glow-effect {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .glow-red {
+            width: 300px;
+            height: 300px;
+            background: rgba(239, 68, 68, 0.5);
+            top: -100px;
+            left: -100px;
+        }
+
+        .glow-purple {
+            width: 200px;
+            height: 200px;
+            background: rgba(168, 85, 247, 0.3);
+            bottom: 100px;
+            right: -100px;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        /* Contact Card Styles */
+        .contact-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .contact-card:hover::before {
+            left: 100%;
+        }
+
+        .contact-card:hover {
+            border-color: rgba(239, 68, 68, 0.4);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.7) 100%);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.15);
+        }
+
+        /* Form Input Styles */
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1.5px solid rgba(71, 85, 105, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(148, 163, 184, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(239, 68, 68, 0.6);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .form-input:hover {
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Animations */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .animate-in {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .animate-in-right {
+            animation: slideInRight 0.6s ease-out forwards;
+        }
+
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Spinner Loading */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success/Error Messages */
+        .success-message {
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+
+        .success-checkmark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-checkmark .check-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .success-checkmark .check-icon::after {
+            content: '✓';
+            color: #4ade80;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Stagger Delay */
+        .stagger-1 { --delay: 0.1s; }
+        .stagger-2 { --delay: 0.2s; }
+        .stagger-3 { --delay: 0.3s; }
+        .stagger-4 { --delay: 0.4s; }
+
+        .animate-stagger {
+            animation: slideInLeft 0.6s ease-out forwards;
+            animation-delay: var(--delay, 0s);
+            opacity: 0;
+        }
+
+        /* Navigation Enhancement */
+        nav {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Enhanced Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Social Icon Hover Effects */
+        .social-icon {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .social-icon::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 8px;
+            border: 2px solid currentColor;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-icon:hover::after {
+            opacity: 0.2;
+        }
+
+        /* Working Hours Live Status */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 6px;
+            color: #22c55e;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive */
+        @media (max-width: 820px) {
+            .form-input {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-card {
+                padding: 16px;
+            }
+
+            .btn-primary {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-dots bg-slate-900 text-white">
+    <!-- Glowing Background Elements -->
+    <div class="glow-effect glow-red"></div>
+    <div class="glow-effect glow-purple"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-slate-900/80 border-b border-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold shadow-lg shadow-red-500/30">
+                        S
+                    </div>
+                    <span class="font-bold text-lg hidden sm:inline bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">Sa7bi</span>
+                </a>
+                <a href="/" class="flex items-center gap-2 text-slate-400 hover:text-red-400 transition-colors font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="min-h-screen pt-24 pb-16 px-4 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-20 animate-in">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent leading-tight">
+                    Get In Touch
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                    We're here to help and answer any question you might have. Reach out to us and we'll get back to you as soon as possible.
+                </p>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="grid md:grid-cols-2 gap-12 mb-20">
+                <!-- Left Column: Contact Info -->
+                <div class="space-y-6">
+                    <!-- Contact Cards -->
+                    <div class="space-y-4">
+                        <!-- Email -->
+                        <a href="mailto:support@sa7bi.gg" class="contact-card stagger-1 animate-stagger group">
+                            <div class="flex items-start gap-4">
+                                <div class="flex-shrink-0">
+                                    <div class="flex items-center justify-center h-14 w-14 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/20 text-red-400 group-hover:from-red-500 group-hover:to-red-600 group-hover:text-white transition-all duration-300 shadow-lg shadow-red-500/10">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white group-hover:text-red-400 transition-colors">Email</h3>
+                                    <p class="text-slate-300 font-medium group-hover:text-red-300 transition-colors">support@sa7bi.gg</p>
+                                    <p class="text-sm text-slate-500 mt-1">We respond within 24 hours</p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Phone -->
+                        <a href="tel:+212612345678" class="contact-card stagger-2 animate-stagger group">
+                            <div class="flex items-start gap-4">
+                                <div class="flex-shrink-0">
+                                    <div class="flex items-center justify-center h-14 w-14 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/20 text-red-400 group-hover:from-red-500 group-hover:to-red-600 group-hover:text-white transition-all duration-300 shadow-lg shadow-red-500/10">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 00.948.684l1.498 4.493a1 1 0 00.502.756l2.048 1.024a11.04 11.04 0 01-5.693 5.692l-1.024-2.048a1 1 0 00-.756-.502L4.684 9.236A1 1 0 004 8.28V5z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white group-hover:text-red-400 transition-colors">Phone</h3>
+                                    <p class="text-slate-300 font-medium group-hover:text-red-300 transition-colors">+212 6 12 34 56 78</p>
+                                    <p class="text-sm text-slate-500 mt-1">Fast and direct support</p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- WhatsApp -->
+                        <a href="https://wa.me/212612345678" target="_blank" rel="noopener noreferrer" class="contact-card stagger-3 animate-stagger group">
+                            <div class="flex items-start gap-4">
+                                <div class="flex-shrink-0">
+                                    <div class="flex items-center justify-center h-14 w-14 rounded-xl bg-gradient-to-br from-green-500/20 to-green-600/20 text-green-400 group-hover:from-green-500 group-hover:to-green-600 group-hover:text-white transition-all duration-300 shadow-lg shadow-green-500/10">
+                                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.946 1.347l-.355.192-3.68-.964.984 3.202-.196.314c-1.41 2.246-1.7 4.818-.563 7.21 1.138 2.392 3.528 3.954 6.166 3.954 3.652 0 6.763-2.735 6.763-6.122 0-1.584-.623-3.073-1.757-4.208-1.134-1.134-2.623-1.757-4.208-1.757"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white group-hover:text-green-400 transition-colors">WhatsApp</h3>
+                                    <p class="text-slate-300 font-medium group-hover:text-green-300 transition-colors">+212 6 12 34 56 78</p>
+                                    <p class="text-sm text-slate-500 mt-1">Instant messaging support</p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Location -->
+                       
+
+                    <!-- Working Hours -->
+                    <div class="bg-gradient-to-br from-slate-800/60 to-slate-900/60 rounded-xl p-6 border border-slate-700/50 backdrop-blur-sm shadow-xl shadow-black/20">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" />
+                            </svg>
+                            Business Hours
+                        </h3>
+                        <div class="space-y-3 text-slate-300">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Monday - Friday</span>
+                                <span class="text-slate-400">09:00 - 18:00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Saturday</span>
+                                <span class="text-slate-400">10:00 - 14:00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Sunday</span>
+                                <span class="text-slate-400">Closed</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-700/50">
+                            <div class="status-badge">
+                                <div class="status-dot"></div>
+                                Online Now
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Contact Form -->
+                <div class="animate-in-right">
+                    <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-8 border border-slate-700/50 backdrop-blur-sm shadow-2xl shadow-black/30">
+                        <h2 class="text-2xl font-bold text-white mb-6">Send Us a Message</h2>
+
+                        <form id="contactForm" class="space-y-5">
+                            <!-- Name -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-200 mb-2">Full Name *</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="John Doe"
+                                    class="form-input"
+                                    required
+                                />
+                                <span class="error-message hidden text-red-400 text-sm mt-1 block"></span>
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-200 mb-2">Email Address *</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="your@email.com"
+                                    class="form-input"
+                                    required
+                                />
+                                <span class="error-message hidden text-red-400 text-sm mt-1 block"></span>
+                            </div>
+
+                            <!-- Phone -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-200 mb-2">Phone Number (Optional)</label>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    placeholder="+212 6 12 34 56 78"
+                                    class="form-input"
+                                />
+                            </div>
+
+                            <!-- Subject -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-200 mb-2">Subject *</label>
+                                <select name="subject" class="form-input" required>
+                                    <option value="" disabled selected>Select a subject</option>
+                                    <option value="support">Technical Support</option>
+                                    <option value="sales">Service Inquiry</option>
+                                    <option value="partnership">Business Partnership</option>
+                                    <option value="complaint">Feedback or Complaint</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <span class="error-message hidden text-red-400 text-sm mt-1 block"></span>
+                            </div>
+
+                            <!-- Message -->
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-200 mb-2">Message *</label>
+                                <textarea
+                                    name="message"
+                                    placeholder="Tell us more about your inquiry..."
+                                    rows="5"
+                                    class="form-input resize-none"
+                                    required
+                                ></textarea>
+                                <span class="error-message hidden text-red-400 text-sm mt-1 block"></span>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button
+                                type="submit"
+                                id="submitBtn"
+                                class="btn-primary w-full py-3 px-6 text-white font-bold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 text-base"
+                            >
+                                <span id="submitText">Send Message</span>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </button>
+
+                            <!-- Success Message -->
+                            <div id="successMessage" class="hidden bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-green-400 flex items-center gap-3 animate-in">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                                <span>Thank you! We'll be in touch soon.</span>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div id="errorMessage" class="hidden bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-red-400 flex items-center gap-3">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <span id="errorText">Something went wrong. Please try again later.</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Section -->
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-10 animate-in">
+                    <h3 class="text-2xl font-bold text-white mb-3">Connect With Us</h3>
+                    <p class="text-slate-400">Follow us for the latest updates and exclusive offers</p>
+                </div>
+
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <!-- Twitter -->
+                    <a href="https://twitter.com/Sa7biSupport" target="_blank" rel="noopener noreferrer" class="social-icon group relative w-14 h-14 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-center hover:bg-blue-500/10 hover:border-blue-500/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-500/20 backdrop-blur-sm">
+                        <svg class="w-6 h-6 text-slate-400 group-hover:text-blue-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7" />
+                        </svg>
+                    </a>
+
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/sa7bi.gg" target="_blank" rel="noopener noreferrer" class="social-icon group relative w-14 h-14 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-center hover:bg-pink-500/10 hover:border-pink-500/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-pink-500/20 backdrop-blur-sm">
+                        <svg class="w-6 h-6 text-slate-400 group-hover:text-pink-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </a>
+
+                    <!-- LinkedIn -->
+                    <a href="https://linkedin.com/company/sa7bi" target="_blank" rel="noopener noreferrer" class="social-icon group relative w-14 h-14 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-center hover:bg-blue-600/10 hover:border-blue-600/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-blue-600/20 backdrop-blur-sm">
+                        <svg class="w-6 h-6 text-slate-400 group-hover:text-blue-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </a>
+
+                    <!-- Discord -->
+                    <a href="https://discord.gg/KNMHB26RRh" target="_blank" rel="noopener noreferrer" class="social-icon group relative w-14 h-14 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-center hover:bg-indigo-600/10 hover:border-indigo-600/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-indigo-600/20 backdrop-blur-sm">
+                        <svg class="w-6 h-6 text-slate-400 group-hover:text-indigo-400 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.211.375-.445.864-.608 1.25a18.27 18.27 0 00-5.487 0c-.163-.386-.398-.875-.609-1.25a.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.08.08 0 00.087-.027c.461-.63.873-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.009-.128c.126-.094.252-.192.372-.291a.074.074 0 01.076-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.076.01c.12.099.246.197.372.291a.077.077 0 01-.008.128 12.299 12.299 0 01-1.873.892.076.076 0 00-.041.107c.352.699.764 1.365 1.225 1.994a.076.076 0 00.087.028 19.86 19.86 0 006.002-3.03.077.077 0 00.032-.057c.5-4.786-.838-8.95-3.549-12.676a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-.965-2.157-2.156 0-1.193.964-2.157 2.157-2.157 1.193 0 2.157.964 2.157 2.157 0 1.19-.965 2.156-2.157 2.156zm7.975 0c-1.183 0-2.157-.965-2.157-2.156 0-1.193.964-2.157 2.157-2.157 1.193 0 2.157.964 2.157 2.157 0 1.19-.964 2.156-2.157 2.156z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/50 bg-slate-900/50 backdrop-blur-sm relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-slate-400">
+            <p>© 2024 Sa7bi - All rights reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.animate-stagger').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Form Handling
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const submitText = document.getElementById('submitText');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Reset messages
+            successMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+
+            // Validate form
+            if (!contactForm.checkValidity()) {
+                contactForm.classList.add('animate-shake');
+                setTimeout(() => contactForm.classList.remove('animate-shake'), 400);
+                return;
+            }
+
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            const spinner = document.createElement('div');
+            spinner.className = 'spinner';
+            submitText.textContent = 'Sending...';
+            submitBtn.innerHTML = '';
+            submitBtn.appendChild(spinner);
+
+            try {
+                // Simulate API call (replace with actual endpoint)
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Show success message
+                successMessage.classList.remove('hidden');
+                contactForm.reset();
+
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    successMessage.classList.add('hidden');
+                }, 5000);
+
+            } catch (error) {
+                // Show error message
+                document.getElementById('errorText').textContent = 'Failed to send message. Please try again.';
+                errorMessage.classList.remove('hidden');
+                errorMessage.classList.add('animate-shake');
+            } finally {
+                // Reset button
+                submitBtn.disabled = false;
+                submitText.textContent = 'Send Message';
+                submitBtn.innerHTML = `
+                    <span id="submitText">Send Message</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                `;
+            }
+        });
+
+        // Real-time form validation
+        const inputs = contactForm.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                const errorSpan = input.parentElement.querySelector('.error-message');
+                if (errorSpan && !input.value) {
+                    errorSpan.textContent = 'This field is required';
+                    errorSpan.classList.remove('hidden');
+                    input.classList.add('border-red-500');
+                } else if (errorSpan) {
+                    errorSpan.classList.add('hidden');
+                    input.classList.remove('border-red-500');
+                }
+            });
+
+            input.addEventListener('focus', () => {
+                const errorSpan = input.parentElement.querySelector('.error-message');
+                if (errorSpan) {
+                    errorSpan.classList.add('hidden');
+                }
+                input.classList.remove('border-red-500');
+            });
+        });
+
+        // Email validation
+        const emailInput = contactForm.querySelector('input[type="email"]');
+        emailInput.addEventListener('blur', () => {
+            const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value);
+            const errorSpan = emailInput.parentElement.querySelector('.error-message');
+            if (!isValid && emailInput.value) {
+                errorSpan.textContent = 'Please enter a valid email address';
+                errorSpan.classList.remove('hidden');
+                emailInput.classList.add('border-red-500');
+            }
+        });
+
+        // Add stagger animation delay on load
+        document.querySelectorAll('.animate-stagger').forEach((el, i) => {
+            el.style.setProperty('--delay', `${i * 0.1}s`);
+            el.style.opacity = '0';
+        });
+
+        // Initialize animations on page load
+        window.addEventListener('load', () => {
+            document.querySelectorAll('[class*="animate-in"]').forEach(el => {
+                el.style.opacity = '0';
+                void el.offsetWidth; // Trigger reflow
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sa7bi{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Suppress Tailwind CDN warning in development
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = tailwind.config || {};
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-somehash" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#ef4444',
+                        'primary-dark': '#991b1b',
+                        'primary-light': '#fca5a5',
+                        secondary: '#000000',
+                        dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24', 600: '#22222e', 500: '#2a2a38' }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'card-hover': 'cardHover 0.3s ease-out',
+                        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'pulse-glow': { '0%, 100%': { boxShadow: '0 0 20px rgba(239, 68, 68, 0.5)' }, '50%': { boxShadow: '0 0 40px rgba(239, 68, 68, 0.8), 0 0 60px rgba(0, 0, 0, 0.4)' } },
+                        'fadeIn': { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        'slideUp': { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        'cardHover': { '0%': { transform: 'translateY(0)' }, '100%': { transform: 'translateY(-4px)' } },
+                        'glowPulse': { '0%, 100%': { boxShadow: '0 4px 20px rgba(239, 68, 68, 0.15)' }, '50%': { boxShadow: '0 8px 30px rgba(239, 68, 68, 0.25)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+        ::-webkit-scrollbar{width:8px}
+        ::-webkit-scrollbar-track{background:#12121a}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#ef4444,#000);border-radius:4px}
+        .gradient-text{background:linear-gradient(135deg,#ef4444 0%,#000000 50%,#ef4444 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradient 3s ease infinite}
+        @keyframes gradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+        @keyframes slideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+        
+        /* Glass Effect */
+        .glass {
+            background: rgba(18, 18, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        /* Navigation Active */
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ef4444, #fca5a5);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Product Card Animations */
+        .product-card{animation:slideUp 0.6s ease-out forwards}
+        .product-card:nth-child(1){animation-delay:0.1s}
+        .product-card:nth-child(2){animation-delay:0.2s}
+        .product-card:nth-child(3){animation-delay:0.3s}
+        .product-card:nth-child(4){animation-delay:0.4s}
+        .product-card:nth-child(5){animation-delay:0.5s}
+        .product-card:nth-child(6){animation-delay:0.6s}
+        .product-card:nth-child(7){animation-delay:0.7s}
+        .product-card:nth-child(8){animation-delay:0.8s}
+        .product-card:nth-child(9){animation-delay:0.9s}
+        .product-card:nth-child(n+10){animation-delay:1s}
+        
+        /* Card Hover Effect */
+        .product-card{transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),box-shadow 0.3s ease}
+        .product-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(239, 68, 68, 0.2)}
+        
+        /* Image Hover Effect */
+        .product-image{overflow:hidden;transition:transform 0.4s ease}
+        .product-card:hover .product-image{transform:scale(1.05)}
+        
+        /* Button Micro-interaction */
+        .btn-buy{position:relative;transition:all 0.3s ease;overflow:hidden}
+        .btn-buy::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,0.2);border-radius:50%;transform:translate(-50%,-50%);transition:width 0.6s,height 0.6s}
+        .btn-buy:hover::before{width:300px;height:300px}
+        .btn-buy:hover{transform:scale(1.05);box-shadow:0 8px 20px rgba(239, 68, 68, 0.4)}
+        
+        /* Page Load Animation */
+        .shop-header{animation:slideUp 0.8s ease-out}
+        
+        /* Smooth transitions for all interactive elements */
+        a, button{transition:all 0.2s ease}
+    </style>
+</head>
+<body class="bg-dark-900 text-white font-sans antialiased">
+    <!-- Navigation (shared) -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-14 h-14 rounded-lg transparent  flex items-center justify-center overflow-hidden shadow-md">
+    <img
+        src="{% static 'logo.png' %}"
+        alt="sdad"
+        class="w-14 h-14 object-contain"
+    >
+
+    </div>
+                 
+                </a>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="nav-link text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="{% url 'shop:shop_list' %}" class="nav-link text-gray-300 hover:text-white transition-colors">Shop</a>
+                    <a href="/contact" class="nav-link text-gray-300 hover:text-white transition-colors">Contact</a>
+                    <a href="{% url 'downloads:download_latest' %}" class="nav-link text-gray-300 hover:text-white transition-colors">Download</a>
+                    
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'shop:cart' %}" class="relative text-gray-300 hover:text-white transition-colors p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                            <span id="cartCount" class="absolute -top-1 -right-1 bg-red-600 text-xs rounded-full px-1">{{ cart_count|default:0 }}</span>
+                        </a>
+                        <a href="{% url 'shop:wishlist' %}" id="wishlistLink" class="relative text-gray-300 hover:text-white transition-colors p-2">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-6.716-4.35-9.222-7.02C-0.14 10.35 2.3 5 7.333 5 9.79 5 12 7 12 7s2.21-2 4.667-2C21.7 5 24.14 10.35 21.222 13.98 18.716 16.65 12 21 12 21z"/></svg>
+                            <span id="wishlistCount" class="absolute -top-1 -right-1 bg-red-600 text-xs rounded-full px-1">{% if user.is_authenticated %}{{ user.wishlist.count }}{% else %}0{% endif %}</span>
+                        </a>
+                        <div class="h-6 w-px bg-gray-700"></div>
+                        <a href="{% url 'shop:dashboard' %}" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">{{ user.username }}</a>
+                        <a href="{% url 'shop:logout' %}" class="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/30 rounded-lg font-semibold hover:bg-red-500/20 transition">Logout</a>
+                    {% else %}
+                        <a href="{% url 'shop:login' %}" class="text-gray-300 hover:text-white transition-colors">Login</a>
+                        <a href="{% url 'shop:register' %}" class="px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-lg font-semibold hover:opacity-90 transition-opacity">Register</a>
+                    {% endif %}
+                </div>
+
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden glass border-t border-dark-600">
+            <div class="px-4 py-4 space-y-3">
+                <a href="/" class="block py-2 text-gray-300 hover:text-white">Home</a>
+                <a href="{% url 'shop:shop_list' %}" class="block py-2 text-gray-300 hover:text-white">Shop</a>
+                <a href="/contact" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+                <a href="{% url 'downloads:download_latest' %}" class="block py-2 text-gray-300 hover:text-white">Download</a>
+                <div class="pt-4 border-t border-dark-600 space-y-2">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'shop:cart' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Cart</a>
+                        <a href="{% url 'shop:dashboard' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Dashboard</a>
+                        <a href="{% url 'shop:logout' %}" class="block w-full py-2 text-center bg-red-500/10 text-red-400 rounded-lg font-semibold">Logout</a>
+                    {% else %}
+                        <a href="{% url 'shop:login' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Login</a>
+                        <a href="{% url 'shop:register' %}" class="block w-full py-2 text-center bg-gradient-to-r from-primary to-secondary rounded-lg font-semibold">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<main class="pt-16">
+        {% block content %}{% endblock %}
+         <footer class="bg-dark-900 border-t border-dark-700 relative overflow-hidden mt-12">
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-50 pointer-events-none"></div>
+            <div class="relative">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-8" data-reveal-stagger>
+                        <div class="footer-section" data-reveal="up" data-reveal-item>
+                            <div class="flex items-center gap-2 mb-6">
+                                <div class="w-10 h-10 rounded-lg transparent from-primary to-primary-dark flex items-center justify-center overflow-hidden">
+                                    <img src="{% static 'logo.png' %}" alt="Sa7bi profile" class="w-full h-full object-cover">
+                                </div>
+                                <span class="font-bold text-lg">Sa7bi</span>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">Premium gaming services for players who want to level up their game with professional boosters and coaching.</p>
+                            <p class="text-gray-500 text-xs mt-6">© <span id="year">2024</span> Sa7bi. All rights reserved.</p>
+                        </div>
+
+                        <div class="footer-section" data-reveal="up" data-reveal-item>
+                            <h3 class="text-white font-semibold mb-4">Product</h3>
+                            <ul class="space-y-3">
+                                <li><a href="/#features" class="footer-link">Features</a></li>
+                                <li><a href="/#games" class="footer-link">Games</a></li>
+                                <li><a href="/shop/" class="footer-link">Pricing</a></li>
+                                <li><a href="/#testimonials" class="footer-link">Testimonials</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="footer-section" data-reveal="up" data-reveal-item>
+                            <h3 class="text-white font-semibold mb-4">Company</h3>
+                            <ul class="space-y-3">
+                                <li><a href="/contact" class="footer-link">Contact</a></li>
+                                <li><a href="#" class="footer-link">About Us</a></li>
+                                <li><a href="#" class="footer-link">FAQ</a></li>
+                                <li><a href="#" class="footer-link">Careers</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="footer-section" data-reveal="up" data-reveal-item>
+                            <h3 class="text-white font-semibold mb-4">Resources</h3>
+                            <ul class="space-y-3">
+                                <li><a href="#" class="footer-link">Blog</a></li>
+                                <li><a href="#" class="footer-link">Changelog</a></li>
+                                <li><a href="#" class="footer-link">Documentation</a></li>
+                                <li><a href="#" class="footer-link">Support</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="footer-section" data-reveal="up" data-reveal-item>
+                            <h3 class="text-white font-semibold mb-4">Follow Us</h3>
+                            <div class="flex gap-4">
+                                <a href="https://discord.gg/KNMHB26RRh" target="_blank" rel="noopener noreferrer" class="social-icon" title="Discord">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.211.375-.445.864-.608 1.25a18.27 18.27 0 00-5.487 0c-.163-.386-.398-.875-.609-1.25a.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.08.08 0 00.087-.027c.461-.63.873-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.009-.128c.126-.094.252-.192.372-.291a.074.074 0 01.076-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.076.01c.12.099.246.197.372.291a.077.077 0 01-.008.128 12.299 12.299 0 01-1.873.892.076.076 0 00-.041.107c.352.699.764 1.365 1.225 1.994a.076.076 0 00.087.028 19.86 19.86 0 006.002-3.03.077.077 0 00.032-.057c.5-4.786-.838-8.95-3.549-12.676a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-.965-2.157-2.156 0-1.193.964-2.157 2.157-2.157 1.193 0 2.157.964 2.157 2.157 0 1.19-.965 2.156-2.157 2.156zm7.975 0c-1.183 0-2.157-.965-2.157-2.156 0-1.193.964-2.157 2.157-2.157 1.193 0 2.157.964 2.157 2.157 0 1.19-.964 2.156-2.157 2.156z"/></svg>
+                                </a>
+                                <a href="https://twitter.com/Sa7biSupport" target="_blank" rel="noopener noreferrer" class="social-icon" title="Twitter"><svg class="w-5 h-5"  fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M453.2 112L523.8 112L369.6 288.2L551 528L409 528L297.7 382.6L170.5 528L99.8 528L264.7 339.5L90.8 112L236.4 112L336.9 244.9L453.2 112zM428.4 485.8L467.5 485.8L215.1 152L173.1 152L428.4 485.8z"/></svg></a>
+                                <a href="https://instagram.com/sa7bi.official" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-t border-dark-700 mt-12 pt-8">
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+                            <div class="flex gap-6">
+                                <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
+                                <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
+                                <a href="#" class="hover:text-primary transition-colors">Cookie Settings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                #loader {
+  transition: opacity 0.6s ease;
+}
+                .footer-link { color: #9ca3af; transition: all 0.3s; }
+                .footer-link:hover { color: #ef4444; }
+                .footer-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #ef4444, #991b1b); transition: width 0.3s ease; }
+            </style>
+        </footer>
+    </main>
+
+    {% block extra_scripts %}{% endblock %}
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Poll wishlist count every 30s for authenticated users
+        (function(){
+            const countEl = document.getElementById('wishlistCount');
+            if(!countEl) return;
+            const update = ()=>{
+                fetch('{% url "shop:wishlist_count" %}').then(r=>r.json()).then(j=>{ countEl.textContent = j.count })
+            }
+            update();
+            setInterval(update, 30000);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Cash Payment - Order Confirmed | Sa7bi{% endblock %}
+
+{% block content %}
+<style>
+    .gradient-text {
+        background: linear-gradient(135deg, #ef4444 0%, #a0000a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .glass {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-hover:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+</style>
+
+<!-- Main Content -->
+<div class="min-h-screen flex items-center justify-center px-4 py-20">
+    <div class="max-w-2xl w-full">
+        
+        <!-- Success Card -->
+        <div class="glass rounded-3xl p-8 sm:p-12 border border-green-500/20 relative overflow-hidden">
+            
+            <!-- Background Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-r from-green-500/5 via-transparent to-transparent opacity-50"></div>
+            
+            <!-- Content -->
+            <div class="relative z-10 text-center">
+                
+                <!-- Success Icon -->
+                <div class="mb-8 inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30">
+                    <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                
+                <!-- Heading -->
+                <h1 class="text-4xl sm:text-5xl font-black mb-4">
+                    Order <span class="gradient-text">Confirmed!</span>
+                </h1>
+                
+                <!-- Subheading -->
+                <p class="text-lg text-gray-400 mb-8">
+                    Your cash payment order has been created successfully.
+                </p>
+                
+                <!-- Order Details Card -->
+                <div class="mb-8 p-6 rounded-2xl bg-dark-800/50 border border-dark-600">
+                    <div class="grid grid-cols-2 gap-4 text-left">
+                        <div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Order Number</div>
+                            <div class="text-2xl font-bold gradient-text">{{ order.id }}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Amount</div>
+                            <div class="text-2xl font-bold text-white">${{ order.total_price }}</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Payment Status</div>
+                            <div class="inline-flex items-center px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-semibold">
+                                <span class="w-2 h-2 rounded-full bg-amber-400 mr-2 animate-pulse"></span>
+                                Awaiting Payment
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="mb-10 text-left bg-dark-800/30 rounded-2xl p-6 border border-primary/20">
+                    <h2 class="text-lg font-bold mb-4 text-white">📋 Next Steps:</h2>
+                    <ol class="space-y-3 text-gray-300 text-sm">
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold mr-3 flex-shrink-0">1</span>
+                            <span>Join our Discord server using the button below</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold mr-3 flex-shrink-0">2</span>
+                            <span>Contact an administrator and mention your <strong>Order ID: {{ order.id }}</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold mr-3 flex-shrink-0">3</span>
+                            <span>Arrange payment details via Discord DM</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold mr-3 flex-shrink-0">4</span>
+                            <span>Once payment is confirmed, your order will be processed immediately</span>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- Discord CTA Button -->
+                <a href="{{ discord_link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-red-600 to-red-800 rounded-xl font-bold text-lg text-white hover:shadow-lg hover:shadow-red-500/50 transition-all transform hover:scale-105 mb-4">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.317 4.369a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.211.375-.445.864-.607 1.25a18.27 18.27 0 00-5.487 0c-.162-.386-.396-.875-.607-1.25a.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.042-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.294.075.075 0 01.078-.01c3.928 1.793 8.18 1.793 12.062 0a.075.075 0 01.079.009c.12.098.246.198.373.295a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.076.076 0 00-.041.107c.352.699.764 1.364 1.225 1.994a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.056c.5-4.506.8-8.9.191-13.257a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-.965-2.157-2.156 0-1.193.974-2.157 2.157-2.157 1.183 0 2.157.964 2.157 2.157 0 1.19-.974 2.156-2.157 2.156zm7.975 0c-1.183 0-2.157-.965-2.157-2.156 0-1.193.974-2.157 2.157-2.157 1.184 0 2.158.964 2.158 2.157 0 1.19-.974 2.156-2.158 2.156z"/>
+                    </svg>
+                    Rejoindre le serveur Discord
+                </a>
+                
+                <!-- Back to Shop Button -->
+                <a href="{% url 'shop:shop_list' %}" class="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-lg text-white glass border border-dark-600 hover:border-primary/50 transition-all">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+        
+        <!-- Support Info -->
+        <div class="mt-8 text-center text-gray-400 text-sm">
+            <p>Questions? Contact our support team on Discord or email support@sa7bi.com</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

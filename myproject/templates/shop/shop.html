@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop — Sa7bi{% endblock %}
+
+{% block content %}
+<style>
+  /* Simple subtle gradient background for Shop */
+  .shop-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #071022 0%, #0a0a0f 60%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Page load + reveal animations */
+  .shop-page {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .shop-page.is-loaded {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .shop-header,
+  .shop-filters,
+  .products-grid,
+  .empty-state {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .shop-header.is-visible,
+  .shop-filters.is-visible,
+  .products-grid.is-visible,
+  .empty-state.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .product-card {
+    position: relative;
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    will-change: transform, opacity;
+  }
+
+  .product-card.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .product-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(239, 68, 68, 0.18);
+  }
+
+  .product-image img {
+    transition: transform 0.5s ease;
+  }
+
+  .product-image {
+    position: relative;
+  }
+
+  .product-card:hover .product-image img {
+    transform: scale(1.05);
+  }
+
+  .product-card .btn-buy {
+    position: relative;
+    overflow: hidden;
+    opacity: 0.88;
+    transform: translateY(2px);
+    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .product-card:hover .btn-buy {
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: 0 12px 24px rgba(239, 68, 68, 0.25);
+  }
+
+  .btn-buy:active {
+    transform: scale(0.97);
+  }
+
+  .btn-buy .ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    animation: ripple-expand 0.6s ease-out;
+  }
+
+  .wishlist-btn {
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .wishlist-btn.is-active {
+    color: #ef4444;
+    transform: scale(1.1);
+  }
+
+  .rating-stars .star {
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+
+  .rating-stars:hover .star {
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.6));
+    transform: translateY(-1px);
+  }
+
+  .product-card.is-loading .product-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.04) 100%);
+    animation: shimmer 1.2s linear infinite;
+  }
+
+  .product-card.is-loading .product-image img {
+    filter: blur(0.6px) brightness(0.75);
+  }
+
+  .empty-state .empty-icon {
+    animation: empty-bounce 1.6s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes empty-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shop-page,
+    .shop-header,
+    .shop-filters,
+    .products-grid,
+    .empty-state,
+    .product-card,
+    .product-card .btn-buy,
+    .product-image img {
+      transition: none;
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
+  }
+</style>
+
+<div class="shop-background"></div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 shop-page">
+  <!-- Shop Header with Animation -->
+  <header class="mb-12 text-center shop-header">
+    <h1 class="text-4xl sm:text-5xl font-black mb-4">
+      Gaming <span class="gradient-text">Services Shop</span>
+    </h1>
+    <p class="text-gray-400 mt-3 max-w-2xl mx-auto text-lg">Browse our premium gaming services and level up your gaming experience</p>
+  </header>
+
+  {% if products %}
+  <!-- Products Grid with Staggered Animation -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 products-grid" data-stagger>
+    {% for product in products %}
+    <div class="product-card bg-dark-800 rounded-2xl overflow-hidden border border-dark-700 transition-all hover:border-primary/50" data-href="{% url 'shop:product_detail' product.slug %}" role="link" tabindex="0" data-reveal>
+      <!-- Product Image Container -->
+      <div class="relative h-48 bg-gradient-to-br from-dark-700 to-dark-900 overflow-hidden group">
+        <div class="product-image w-full h-full">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+          {% else %}
+            <div class="w-full h-full flex items-center justify-center text-gray-500">
+              <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+        <!-- Overlay Gradient on Hover -->
+        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </div>
+
+      <!-- Product Content -->
+      <div class="p-6">
+        <h3 class="text-xl font-bold text-white mb-2">
+          <a href="{% url 'shop:product_detail' product.slug %}" class="hover:underline">{{ product.name }}</a>
+        </h3>
+        <p class="text-sm text-gray-400 mb-4 line-clamp-2">{{ product.description|truncatechars:100 }}</p>
+        
+        <!-- Price and Button Container -->
+        <div class="flex items-center justify-between pt-4 border-t border-dark-700">
+          <div class="flex flex-col">
+            <span class="text-xs text-gray-500 uppercase tracking-wide">Price</span>
+            <div class="text-2xl font-black gradient-text">${{ product.price }}</div>
+          </div>
+          <div class="flex items-center gap-3">
+            <a href="{% url 'shop:add_to_cart' product.id %}?next={% url 'shop:shop_list' %}" class="btn-buy inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white px-5 py-2 rounded-xl font-semibold hover:shadow-lg">
+              <span>Add</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Trust Badges Section -->
+  
+
+  {% else %}
+  <!-- Empty State -->
+  <div class="bg-gradient-to-br from-dark-800 to-dark-900 rounded-2xl p-12 text-center border border-dark-700 empty-state" data-reveal>
+    <div class="mb-4">
+      <svg class="w-16 h-16 mx-auto text-gray-600 opacity-50 empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      </svg>
+    </div>
+    <h2 class="text-2xl font-semibold mb-2">No products yet</h2>
+    <p class="text-gray-400 mb-6">We don't have products active in the store yet. Add products in the admin panel.</p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="/admin/" class="px-6 py-3 bg-gradient-to-r from-primary to-secondary rounded-xl font-semibold hover:shadow-lg transition-all">Add Products</a>
+      <a href="/" class="px-6 py-3 border border-primary/30 rounded-xl font-semibold hover:bg-dark-700 transition-all">Back Home</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Scroll + Interaction Animations -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const page = document.querySelector('.shop-page');
+    const header = document.querySelector('.shop-header');
+    const grid = document.querySelector('.products-grid');
+    const revealTargets = document.querySelectorAll('[data-reveal]');
+    const cards = document.querySelectorAll('.product-card');
+
+    if (page) {
+      requestAnimationFrame(() => page.classList.add('is-loaded'));
+    }
+
+    if (prefersReduced) {
+      if (header) header.classList.add('is-visible');
+      if (grid) grid.classList.add('is-visible');
+      revealTargets.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+
+    cards.forEach((card) => card.classList.add('is-loading'));
+    window.addEventListener('load', () => {
+      cards.forEach((card) => card.classList.remove('is-loading'));
+    });
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    if (header) observer.observe(header);
+    if (grid) observer.observe(grid);
+    revealTargets.forEach((el) => observer.observe(el));
+
+    const staggerGroup = document.querySelector('[data-stagger]');
+    if (staggerGroup) {
+      const items = staggerGroup.querySelectorAll('[data-reveal]');
+      items.forEach((item, index) => {
+        item.style.transitionDelay = `${index * 80}ms`;
+      });
+    }
+
+    document.querySelectorAll('.btn-buy').forEach((button) => {
+      button.addEventListener('click', (e) => {
+        const rect = button.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = `${e.clientX - rect.left}px`;
+        ripple.style.top = `${e.clientY - rect.top}px`;
+        button.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    document.querySelectorAll('.wishlist-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        btn.classList.toggle('is-active');
+      });
+    });
+  });
+</script>
+
+<style>
+  @keyframes ripple-expand {
+    to {
+      width: 300px;
+      height: 300px;
+      opacity: 0;
+    }
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  /* Make card clickable */
+  .product-card{cursor:pointer}
+</style>
+
+<script>
+  // Make entire product card clickable, but ignore clicks on links/buttons inside
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', function(e) {
+        // If click originated from a link or button, don't navigate
+        if (e.target.closest('a') || e.target.closest('button') || e.target.closest('form') ) return;
+        const href = card.getAttribute('data-href');
+        if (href) {
+          window.location.href = href;
+        }
+      });
+
+      // Support keyboard activation
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const href = card.getAttribute('data-href');
+          if (href) window.location.href = href;
+        }
+      });
+    });
+  });
+</script>
+</style>
+
+    <!-- Footer (copied from homepage) -->
+    
+
+    {% endblock %}

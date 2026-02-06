@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Wishlist — Sa7bi{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <h1 class="text-2xl font-black gradient-text mb-6">Your Wishlist</h1>
+
+  {% if items.exists %}
+    <div class="grid grid-cols-1 gap-4">
+      {% for item in items %}
+        <div class="bg-dark-800 rounded-2xl border border-dark-700 p-4 flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            {% if item.product.image %}
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded" />
+            {% else %}
+              <div class="w-20 h-20 bg-dark-700 flex items-center justify-center text-gray-500 rounded">No image</div>
+            {% endif %}
+            <div>
+              <a href="{% url 'shop:product_detail' item.product.slug %}" class="text-white font-semibold">{{ item.product.name }}</a>
+              <div class="text-gray-400">${{ item.product.price }}</div>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <a href="{% url 'shop:product_detail' item.product.slug %}" class="px-4 py-2 border border-primary/30 rounded-lg text-sm">View</a>
+            <form method="post" action="{% url 'shop:remove_from_wishlist' item.product.id %}">
+              {% csrf_token %}
+              <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">Remove</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-400">Your wishlist is empty. Browse the <a href="{% url 'shop:shop_list' %}" class="text-primary">shop</a> to add items.</p>
+  {% endif %}
+</div>
+{% endblock %}

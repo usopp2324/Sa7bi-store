@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ version.version_number }} — Sa7bi Desktop Download{% endblock %}
+
+{% block content %}
+<div class="relative min-h-screen pt-24 pb-12 overflow-hidden">
+  <!-- Animated Background -->
+  <div class="absolute inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900"></div>
+    <div class="absolute top-0 -left-4 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+    <div class="absolute -bottom-8 right-20 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Back Link -->
+    <div class="mb-6">
+      <a href="{% url 'downloads:download_latest' %}" class="inline-flex items-center text-primary hover:text-primary-light transition-colors">
+        <i class="fa-solid fa-arrow-left mr-2"></i>Back to Downloads
+      </a>
+    </div>
+
+    <!-- Version Card -->
+    <div class="bg-dark-800 border border-gray-800 rounded-2xl p-8 shadow-2xl animate-slide-up">
+      <div class="mb-8 pb-8 border-b border-gray-700">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <h1 class="text-4xl font-bold gradient-text mb-2">{{ version.name }}</h1>
+            <div class="flex items-center gap-6 text-gray-400">
+              <span><i class="fa-solid fa-tag mr-2"></i>v{{ version.version_number }}</span>
+              <span><i class="fa-solid fa-calendar mr-2"></i>{{ version.release_date|date:'F j, Y' }}</span>
+              <span><i class="fa-solid fa-database mr-2"></i>{{ version.file_size }}</span>
+            </div>
+          </div>
+          <a href="{% url 'downloads:download_file' version.version_number %}" class="group relative inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary to-primary-dark rounded-lg font-bold text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden">
+            <div class="absolute inset-0 bg-white/20 translate-y-12 group-hover:translate-y-0 transition-transform duration-300"></div>
+            <i class="fa-solid fa-download mr-2 text-lg"></i>
+            <span class="relative">Download</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold mb-4">Release Notes</h2>
+        <div class="prose prose-invert prose-sm max-w-none text-gray-300 leading-relaxed">
+          {{ version.description|linebreaks }}
+        </div>
+      </div>
+
+      <!-- System Requirements -->
+      <div class="bg-dark-700/30 border border-gray-700 rounded-lg p-6 mb-8">
+        <h3 class="font-semibold mb-4">System Requirements</h3>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Windows 10 or later</li>
+          <li><i class="fa-solid fa-check text-green-500 mr-2"></i>2GB RAM minimum</li>
+          <li><i class="fa-solid fa-check text-green-500 mr-2"></i>100MB free disk space</li>
+          <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Internet connection for setup</li>
+        </ul>
+      </div>
+
+      <!-- Download Button -->
+      <div class="flex gap-3">
+        <a href="{% url 'downloads:download_file' version.version_number %}" class="flex-1 inline-flex items-center justify-center px-6 py-4 bg-gradient-to-r from-primary to-primary-dark rounded-lg font-bold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300">
+          <i class="fa-solid fa-download mr-2 text-lg"></i>Download v{{ version.version_number }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Other Versions -->
+    {% if others %}
+      <div class="mt-12">
+        <h2 class="text-2xl font-bold mb-6">Other Releases</h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          {% for v in others %}
+            <a href="{% url 'downloads:download_version' v.version_number %}" class="group bg-dark-800 border border-gray-800 rounded-lg p-4 hover:border-primary/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <div class="font-semibold text-white">v{{ v.version_number }}</div>
+                  <div class="text-sm text-gray-400">{{ v.name }}</div>
+                </div>
+                <i class="fa-solid fa-arrow-right text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i>
+              </div>
+              <div class="flex items-center gap-4 text-xs text-gray-500">
+                <span><i class="fa-solid fa-calendar mr-1"></i>{{ v.release_date|date:'M j, Y' }}</span>
+                <span><i class="fa-solid fa-database mr-1"></i>{{ v.file_size }}</span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(135deg, #ef4444 0%, #000000 50%, #ef4444 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient 3s ease infinite;
+  }
+
+  @keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+  }
+</style>
+{% endblock %}

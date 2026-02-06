@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages Dashboard - Sa7bi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-item {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .unread-badge {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%);
+            border: 1px solid rgba(71, 85, 105, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.1);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-14 h-14 rounded-lg transparent flex items-center justify-center overflow-hidden shadow-md">
+                        <img 
+                            src="https://media.discordapp.net/attachments/1468593183389651210/1468596629698384068/b_i_want_to_be_better-removebg-preview.png?ex=698498b1&is=69834731&hm=1de55b8f0387653b989f62592b1c8e7ebbc35429960195ef32aaa844731224f3&=&format=webp&quality=lossless"
+                            alt="Sa7bi Logo"
+                            class="w-14 h-14 object-contain"
+                        >
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="nav-link text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="{% url 'shop:shop_list' %}" class="nav-link text-gray-300 hover:text-white transition-colors">Shop</a>
+                    <a href="/contact" class="nav-link text-gray-300 hover:text-white transition-colors">Contact</a>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'shop:cart' %}" class="relative text-gray-300 hover:text-white transition-colors p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                        </a>
+                        <div class="h-6 w-px bg-gray-700"></div>
+                        <a href="{% url 'shop:dashboard' %}" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">{{ user.username }}</a>
+                        <a href="{% url 'shop:logout' %}" class="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/30 rounded-lg font-semibold hover:bg-red-500/20 transition">Logout</a>
+                    {% else %}
+                        <a href="{% url 'shop:login' %}" class="text-gray-300 hover:text-white transition-colors">Login</a>
+                        <a href="{% url 'shop:register' %}" class="px-4 py-2 bg-gradient-to-r from-red-500 to-black rounded-lg font-semibold hover:opacity-90 transition-opacity">Register</a>
+                    {% endif %}
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden glass border-t border-dark-600">
+            <div class="px-4 py-4 space-y-3">
+                <a href="/" class="block py-2 text-gray-300 hover:text-white">Home</a>
+                <a href="{% url 'shop:shop_list' %}" class="block py-2 text-gray-300 hover:text-white">Shop</a>
+                <a href="/contact" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+                <div class="pt-4 border-t border-dark-600 space-y-2">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'shop:cart' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Cart</a>
+                        <a href="{% url 'shop:dashboard' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Dashboard</a>
+                        <a href="{% url 'shop:logout' %}" class="block w-full py-2 text-center bg-red-500/10 text-red-400 rounded-lg font-semibold">Logout</a>
+                    {% else %}
+                        <a href="{% url 'shop:login' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Login</a>
+                        <a href="{% url 'shop:register' %}" class="block w-full py-2 text-center bg-gradient-to-r from-red-500 to-black rounded-lg font-semibold">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="min-h-screen pt-24 pb-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">
+                    Messages Dashboard
+                </h1>
+                <p class="text-slate-400">Manage and read all contact form submissions</p>
+            </div>
+
+            <!-- Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="stat-card rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-slate-400 text-sm font-medium">Total Messages</p>
+                            <p class="text-3xl font-bold text-white mt-2">{{ total_messages }}</p>
+                        </div>
+                        <svg class="w-12 h-12 text-red-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="stat-card rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-slate-400 text-sm font-medium">Unread Messages</p>
+                            <p class="text-3xl font-bold text-red-400 mt-2 unread-badge">{{ unread_messages }}</p>
+                        </div>
+                        <svg class="w-12 h-12 text-red-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="stat-card rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-slate-400 text-sm font-medium">Read Messages</p>
+                            <p class="text-3xl font-bold text-green-400 mt-2">{{ total_messages|add:0|add:unread_messages|stringformat:"-d" }}</p>
+                        </div>
+                        <svg class="w-12 h-12 text-green-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="mb-8 flex flex-col md:flex-row gap-4">
+                <form method="get" class="flex gap-2 flex-1">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ search_query }}"
+                        placeholder="Search by name, email, or message..." 
+                        class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+                    >
+                    <button type="submit" class="px-6 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-medium transition-colors">
+                        Search
+                    </button>
+                </form>
+                
+                <div class="flex gap-2">
+                    <a href="?filter=all" class="px-4 py-2 rounded-lg font-medium transition-all {% if filter_type == 'all' %}bg-red-500 text-white{% else %}bg-slate-800 text-slate-300 hover:bg-slate-700{% endif %}">
+                        All
+                    </a>
+                    <a href="?filter=unread" class="px-4 py-2 rounded-lg font-medium transition-all {% if filter_type == 'unread' %}bg-red-500 text-white{% else %}bg-slate-800 text-slate-300 hover:bg-slate-700{% endif %}">
+                        Unread ({{ unread_messages }})
+                    </a>
+                    <a href="?filter=read" class="px-4 py-2 rounded-lg font-medium transition-all {% if filter_type == 'read' %}bg-red-500 text-white{% else %}bg-slate-800 text-slate-300 hover:bg-slate-700{% endif %}">
+                        Read
+                    </a>
+                </div>
+            </div>
+
+            <!-- Messages List -->
+            <div class="space-y-3">
+                {% if messages %}
+                    {% for message in messages %}
+                        <a href="/messages/{{ message.id }}" class="message-item block bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-5 hover:border-red-500/30 hover:shadow-lg hover:shadow-red-500/10 transition-all">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h3 class="text-lg font-bold text-white">{{ message.name }}</h3>
+                                        {% if not message.is_read %}
+                                            <span class="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">NEW</span>
+                                        {% endif %}
+                                        <span class="px-2 py-1 bg-slate-700 text-slate-300 text-xs rounded">
+                                            {% if message.subject == 'support' %}
+                                                🔧 Technical Support
+                                            {% elif message.subject == 'sales' %}
+                                                💼 Service Inquiry
+                                            {% elif message.subject == 'partnership' %}
+                                                🤝 Partnership
+                                            {% elif message.subject == 'complaint' %}
+                                                ⚠️ Feedback/Complaint
+                                            {% else %}
+                                                📌 Other
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <p class="text-slate-300 text-sm mb-2">{{ message.email }}</p>
+                                    <p class="text-slate-400 text-sm line-clamp-2">{{ message.message|truncatewords:20 }}</p>
+                                    <p class="text-slate-500 text-xs mt-2">
+                                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        {{ message.created_at|date:"M d, Y H:i" }}
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    {% if message.phone %}
+                                        <p class="text-slate-400 text-sm">{{ message.phone }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-8 text-center">
+                        <svg class="w-16 h-16 text-slate-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <p class="text-slate-400 text-lg">No messages found</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="mt-8 flex justify-center items-center gap-2">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if filter_type != 'all' %}&filter={{ filter_type }}{% endif %}" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">«</a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if filter_type != 'all' %}&filter={{ filter_type }}{% endif %}" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">‹</a>
+                    {% endif %}
+
+                    <span class="text-slate-400">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if filter_type != 'all' %}&filter={{ filter_type }}{% endif %}" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">›</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if filter_type != 'all' %}&filter={{ filter_type }}{% endif %}" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">»</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+</html>

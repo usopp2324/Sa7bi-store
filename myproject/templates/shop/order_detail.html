@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Details — Sa7bi{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <!-- Header -->
+  <header class="mb-12">
+    <a href="{% url 'shop:dashboard' %}" class="text-primary hover:text-secondary flex items-center gap-1 mb-4 transition">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Back to Dashboard
+    </a>
+    <h1 class="text-4xl font-black mb-4">
+      Order <span class="gradient-text">#{{ order.order_id|truncatechars:13 }}</span>
+    </h1>
+  </header>
+
+  <!-- Order Status & Info -->
+  <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-12">
+    <!-- Status -->
+    <div class="bg-dark-800 rounded-2xl border border-dark-700 p-6">
+      <p class="text-sm text-gray-400 uppercase tracking-wide mb-2">Status</p>
+      <span class="{% if order.status == 'paid' %}bg-green-500/10 text-green-400 border-green-500/30{% elif order.status == 'pending' %}bg-yellow-500/10 text-yellow-400 border-yellow-500/30{% else %}bg-red-500/10 text-red-400 border-red-500/30{% endif %} px-3 py-2 rounded-lg text-sm font-bold border capitalize inline-block">
+        {{ order.status }}
+      </span>
+    </div>
+
+    <!-- Order Date -->
+    <div class="bg-dark-800 rounded-2xl border border-dark-700 p-6">
+      <p class="text-sm text-gray-400 uppercase tracking-wide mb-2">Order Date</p>
+      <p class="text-lg font-bold">{{ order.created_at|date:"M d, Y" }}</p>
+      <p class="text-xs text-gray-500 mt-1">{{ order.created_at|time:"H:i" }}</p>
+    </div>
+
+    <!-- Order ID -->
+    <div class="bg-dark-800 rounded-2xl border border-dark-700 p-6">
+      <p class="text-sm text-gray-400 uppercase tracking-wide mb-2">Order ID</p>
+      <p class="text-lg font-mono font-bold">{{ order.order_id|truncatechars:20 }}</p>
+    </div>
+
+    <!-- Items Count -->
+    <div class="bg-dark-800 rounded-2xl border border-dark-700 p-6">
+      <p class="text-sm text-gray-400 uppercase tracking-wide mb-2">Items</p>
+      <p class="text-3xl font-black text-primary">{{ order.item_count }}</p>
+    </div>
+  </div>
+
+  <!-- Order Items -->
+  <div class="bg-dark-800 rounded-2xl border border-dark-700 overflow-hidden mb-8">
+    <div class="p-8 border-b border-dark-700">
+      <h2 class="text-2xl font-bold">Order Items</h2>
+    </div>
+
+    <div class="divide-y divide-dark-700">
+      {% for item in order.items.all %}
+      <div class="p-6 hover:bg-dark-700/50 transition">
+        <div class="flex gap-6">
+          <!-- Product Image -->
+          <div class="flex-shrink-0">
+            {% if item.product.image %}
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-24 h-24 rounded-lg object-cover">
+            {% else %}
+              <div class="w-24 h-24 rounded-lg bg-dark-700 flex items-center justify-center">
+                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Product Details -->
+          <div class="flex-grow">
+            <h3 class="text-xl font-bold text-white mb-2">{{ item.product.name }}</h3>
+            <p class="text-sm text-gray-400 mb-4">{{ item.product.description|truncatechars:100 }}</p>
+            
+            <div class="flex flex-wrap gap-6">
+              <div>
+                <p class="text-xs text-gray-500 uppercase">Unit Price</p>
+                <p class="text-lg font-bold text-primary">${{ item.price }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase">Quantity</p>
+                <p class="text-lg font-bold">{{ item.quantity }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase">Subtotal</p>
+                <p class="text-lg font-bold">${{ item.subtotal }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Customer Details -->
+    <div class="bg-dark-800 rounded-2xl border border-dark-700 p-6">
+      <h3 class="text-lg font-bold mb-4">Customer Details</h3>
+      <div class="text-sm text-gray-400 space-y-2">
+        <p>{{ user.first_name|default:"First" }} {{ user.last_name|default:"Last" }}</p>
+        <p>{{ user.email }}</p>
+      </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="bg-dark-800 rounded-2xl border border-dark-700 p-6">
+      <h3 class="text-lg font-bold mb-4">Payment Method</h3>
+      <div class="text-sm text-gray-400 space-y-2">
+        <p>{{ order.payment_method|title }}</p>
+        <p class="text-xs text-gray-500 mt-4">Status: {{ order.payment_status|title }}</p>
+      </div>
+    </div>
+
+    <!-- Order Total -->
+    <div class="bg-dark-800 rounded-2xl border border-dark-700 p-6">
+      <h3 class="text-lg font-bold mb-4">Order Total</h3>
+      <div class="space-y-3">
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-400">Subtotal</span>
+          <span class="text-white">${{ order.total_price }}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-400">Shipping</span>
+          <span class="text-primary font-semibold">FREE</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-400">Tax</span>
+          <span class="text-white">$0.00</span>
+        </div>
+        <div class="pt-3 border-t border-dark-700 flex justify-between">
+          <span class="font-bold">Total</span>
+          <span class="text-2xl font-black gradient-text">${{ order.total_price }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-12 flex gap-4">
+    <a href="{% url 'shop:dashboard' %}" class="px-6 py-3 bg-dark-700 hover:bg-dark-600 rounded-xl font-semibold transition">
+      Back to Dashboard
+    </a>
+    <a href="{% url 'shop:shop_list' %}" class="px-6 py-3 bg-gradient-to-r from-primary to-secondary rounded-xl font-semibold hover:shadow-lg transition">
+      Continue Shopping
+    </a>
+  </div>
+</div>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(135deg, #ef4444 0%, #000000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+
+{% endblock %}

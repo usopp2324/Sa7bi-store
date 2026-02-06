@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Register — Sa7bi{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-black mb-2">
+        Join <span class="gradient-text">Sa7bi</span>
+      </h1>
+      <p class="text-gray-400">Create your account to start shopping</p>
+    </div>
+
+    <!-- Form Container -->
+    <form method="POST" class="bg-dark-800 rounded-2xl p-8 border border-dark-700">
+      {% csrf_token %}
+
+      <!-- Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="mb-6 p-4 rounded-xl {% if message.tags %}bg-{{ message.tags }}-500/10 text-{{ message.tags }}-400 border border-{{ message.tags }}-500/30{% else %}bg-primary/10 text-primary border border-primary/30{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Username Field -->
+      <div class="mb-6">
+        <label for="username" class="block text-sm font-semibold mb-2">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username" 
+          required 
+          placeholder="Username"
+          class="w-full px-4 py-3 bg-dark-700 rounded-xl border border-dark-600 focus:border-primary focus:outline-none transition text-white placeholder-gray-500"
+        >
+        <p class="text-xs text-gray-500 mt-1">3-30 characters, letters, numbers, and underscores</p>
+      </div>
+
+      <!-- Email Field -->
+      <div class="mb-6">
+        <label for="email" class="block text-sm font-semibold mb-2">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          required 
+          placeholder="you@example.com"
+          class="w-full px-4 py-3 bg-dark-700 rounded-xl border border-dark-600 focus:border-primary focus:outline-none transition text-white placeholder-gray-500"
+        >
+      </div>
+
+      <!-- Password Field -->
+      <div class="mb-6">
+        <label for="password1" class="block text-sm font-semibold mb-2">Password</label>
+        <input 
+          type="password" 
+          id="password1" 
+          name="password1" 
+          required 
+          placeholder="••••••••"
+          class="w-full px-4 py-3 bg-dark-700 rounded-xl border border-dark-600 focus:border-primary focus:outline-none transition text-white placeholder-gray-500"
+        >
+        <p class="text-xs text-gray-500 mt-1">At least 8 characters</p>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="mb-8">
+        <label for="password2" class="block text-sm font-semibold mb-2">Confirm Password</label>
+        <input 
+          type="password" 
+          id="password2" 
+          name="password2" 
+          required 
+          placeholder="••••••••"
+          class="w-full px-4 py-3 bg-dark-700 rounded-xl border border-dark-600 focus:border-primary focus:outline-none transition text-white placeholder-gray-500"
+        >
+      </div>
+
+
+      <!-- Submit Button -->
+      <button 
+        type="submit"
+        class="w-full btn-primary bg-gradient-to-r from-primary to-secondary text-white font-semibold py-3 rounded-xl transition-all hover:shadow-lg active:scale-95"
+      >
+        Create Account
+      </button>
+        <div class="flex items-center my-8">
+        <div class="flex-1 h-px bg-dark-600"></div>
+        <span class="px-3 text-gray-500 text-sm">Or continue with</span>
+        <div class="flex-1 h-px bg-dark-600"></div>
+      </div>
+
+      <!-- Discord Login Button -->
+      <a 
+        href="{% url 'shop:discord_login' %}"
+        class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all active:scale-95"
+      >
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20.317 4.3671a19.8062 19.8062 0 00-4.885-1.515a.074.074 0 00-.079.0366c-.211.3748-.444.8617-.607 1.2463a18.27 18.27 0 00-5.487 0c-.165-.3847-.395-.8715-.607-1.2463a.077.077 0 00-.079-.0365 19.7896 19.7896 0 00-4.885 1.515a.074.074 0 00-.041.0277C.5 6.7748 0 9.1229 0 11.4155v.1192c0 2.3927.5 5.7405 2.221 7.9591a.077.077 0 00.041.03 19.9068 19.9068 0 005.858 1.8559.078.078 0 00.085-.0276c.462-.6234.87-1.2829 1.213-1.9577a.073.073 0 00-.041-.101 12.982 12.982 0 01-1.85-.892.074.074 0 01-.008-.123c.124-.093.248-.189.368-.276a.073.073 0 01.076-.01c3.89 1.77 8.132 1.77 12.022 0a.073.073 0 01.077.009c.12.087.244.183.368.276a.074.074 0 01-.006.123 12.902 12.902 0 01-1.851.892.074.074 0 01-.041.101c.343.676.751 1.335 1.213 1.957a.078.078 0 00.085.028 20.04 20.04 0 005.858-1.855.074.074 0 00.041-.03c1.721-2.182 2.221-5.529 2.221-7.959v-.1192c0-2.2926-.5-5.7405-2.221-7.9591a.077.077 0 00-.041-.029zM8.02 15.3312c-1.183 0-2.157-.965-2.157-2.156 0-1.193.964-2.157 2.157-2.157 1.193 0 2.157.964 2.157 2.157 0 1.19-.964 2.156-2.157 2.156zm7.975 0c-1.183 0-2.157-.965-2.157-2.156 0-1.193.964-2.157 2.157-2.157 1.192 0 2.157.964 2.157 2.157 0 1.19-.965 2.156-2.157 2.156z"/>
+        </svg>
+        Login with Discord
+      </a>
+
+      <!-- Login Link -->
+      <p class="text-center text-gray-400 mt-6">
+        Already have an account? 
+        <a href="{% url 'shop:login' %}" class="text-primary font-semibold hover:text-secondary transition">
+          Sign In
+        </a>
+      </p>
+    </form>
+   
+
+    <!-- Security Badge -->
+    <div class="mt-8 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+      </svg>
+      Your data is encrypted and secure
+    </div>
+  </div>
+</div>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(135deg, #ef4444 0%, #000000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+
+{% endblock %}

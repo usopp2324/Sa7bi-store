@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}Download Sa7bi Desktop — Official Windows App{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative min-h-screen pt-24 pb-12 overflow-hidden">
+  <!-- Animated Background -->
+  <div class="absolute inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900"></div>
+    <div class="absolute top-0 -left-4 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+    <div class="absolute top-0 -right-4 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Hero Text -->
+    <div class="text-center mb-12 animate-fade-in">
+      <div class="inline-block mb-4">
+        <span class="px-4 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium">
+          <i class="fa-brands fa-windows mr-2"></i>Windows Desktop App
+        </span>
+      </div>
+      <h1 class="text-5xl md:text-6xl font-bold gradient-text mb-4">Sa7bi Desktop</h1>
+      <p class="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
+        Experience seamless performance with the official Sa7bi desktop application. Optimized for Windows, packed with features.
+      </p>
+    </div>
+
+    {% if version %}
+      <!-- Latest Version Card (Highlighted) -->
+      <div class="mb-12 animate-slide-up" style="animation-delay: 0.2s;">
+        <div class="relative group">
+          <div class="absolute inset-0 bg-gradient-to-r from-primary to-primary-dark rounded-2xl blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+          <div class="relative bg-dark-800 border border-primary/30 rounded-2xl p-8 shadow-2xl">
+            <div class="absolute -top-4 left-8">
+              <span class="px-3 py-1 bg-primary text-white text-xs font-bold rounded-full uppercase tracking-wider">Latest Release</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 pt-4">
+              <!-- Info Section -->
+              <div>
+                <div class="mb-6">
+                  <div class="text-4xl font-bold gradient-text mb-2">{{ version.name }}</div>
+                  <div class="flex items-center gap-4 text-gray-400">
+                    <span><i class="fa-solid fa-tag mr-2"></i>v{{ version.version_number }}</span>
+                    <span><i class="fa-solid fa-calendar mr-2"></i>{{ version.release_date|date:'F j, Y' }}</span>
+                  </div>
+                </div>
+
+                <div class="prose prose-invert prose-sm max-w-none mb-6">
+                  <p class="text-gray-300 leading-relaxed">{{ version.description|linebreaks }}</p>
+                </div>
+
+                <div class="flex flex-wrap gap-4">
+                  <div class="bg-dark-700/50 rounded-lg p-3 border border-gray-700">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">File Size</div>
+                    <div class="text-lg font-semibold">{{ version.file_size }}</div>
+                  </div>
+                  <div class="bg-dark-700/50 rounded-lg p-3 border border-gray-700">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider">Platform</div>
+                    <div class="text-lg font-semibold">Windows 10+</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Download Section -->
+              <div class="flex flex-col justify-center items-center md:items-end gap-6">
+                <a href="{% url 'downloads:download_file' version.version_number %}" class="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary to-primary-dark rounded-xl font-bold text-white text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden">
+                  <div class="absolute inset-0 bg-white/20 translate-y-12 group-hover:translate-y-0 transition-transform duration-300"></div>
+                  <i class="fa-solid fa-download mr-3 text-xl"></i>
+                  <span class="relative">Download Now</span>
+                </a>
+
+                <div class="text-center text-sm text-gray-400">
+                  <i class="fa-solid fa-shield-halved mr-2 text-green-500"></i>Safe & Verified
+                </div>
+
+                <div class="w-full bg-dark-700/30 border border-gray-700 rounded-lg p-4">
+                  <div class="text-xs text-gray-500 mb-2 uppercase tracking-wider">System Requirements</div>
+                  <ul class="text-sm text-gray-300 space-y-1">
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Windows 10 or later</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i>2GB RAM minimum</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i>100MB free disk space</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Older Versions Section -->
+      {% if others %}
+        <div class="animate-slide-up" style="animation-delay: 0.4s;">
+          <h2 class="text-2xl font-bold mb-6">Previous Releases</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {% for v in others %}
+              <a href="{% url 'downloads:download_version' v.version_number %}" class="group bg-dark-800 border border-gray-800 rounded-lg p-4 hover:border-primary/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                <div class="flex items-start justify-between mb-3">
+                  <div>
+                    <div class="font-semibold text-white">{{ v.name }}</div>
+                    <div class="text-sm text-gray-400">v{{ v.version_number }}</div>
+                  </div>
+                  <i class="fa-solid fa-arrow-right text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                </div>
+                <div class="flex items-center gap-4 text-xs text-gray-500">
+                  <span><i class="fa-solid fa-calendar mr-1"></i>{{ v.release_date|date:'M j, Y' }}</span>
+                  <span><i class="fa-solid fa-database mr-1"></i>{{ v.file_size }}</span>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    {% else %}
+      <!-- Empty State -->
+      <div class="animate-fade-in">
+        <div class="relative group">
+          <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-primary/10 rounded-2xl blur-2xl opacity-30"></div>
+          <div class="relative bg-dark-800 border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center">
+            <div class="mb-4">
+              <i class="fa-solid fa-inbox text-5xl text-yellow-500"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">No Downloads Available Yet</h2>
+            <p class="text-gray-400 mb-6">App versions are managed in the admin panel. Check back soon for the official release!</p>
+            <a href="/admin/downloads/appversion/" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary to-primary-dark rounded-lg font-semibold text-white hover:shadow-lg transform hover:scale-105 transition-all">
+              <i class="fa-solid fa-plus mr-2"></i>Add First Release (Admin)
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Info Cards -->
+    <div class="mt-16 grid md:grid-cols-3 gap-6 animate-slide-up" style="animation-delay: 0.6s;">
+      <div class="bg-dark-800/50 border border-gray-800 rounded-lg p-6 hover:border-primary/30 transition-colors">
+        <i class="fa-solid fa-bolt text-primary text-3xl mb-3"></i>
+        <h3 class="font-semibold mb-2">Lightning Fast</h3>
+        <p class="text-sm text-gray-400">Optimized performance for seamless experience</p>
+      </div>
+      <div class="bg-dark-800/50 border border-gray-800 rounded-lg p-6 hover:border-primary/30 transition-colors">
+        <i class="fa-solid fa-lock text-primary text-3xl mb-3"></i>
+        <h3 class="font-semibold mb-2">Secure</h3>
+        <p class="text-sm text-gray-400">Enterprise-grade security & encryption</p>
+      </div>
+      <div class="bg-dark-800/50 border border-gray-800 rounded-lg p-6 hover:border-primary/30 transition-colors">
+        <i class="fa-solid fa-headset text-primary text-3xl mb-3"></i>
+        <h3 class="font-semibold mb-2">Support</h3>
+        <p class="text-sm text-gray-400">24/7 customer support & updates</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gradient-text {
+    background: linear-gradient(135deg, #ef4444 0%, #000000 50%, #ef4444 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient 3s ease infinite;
+  }
+
+  @keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+</style>
+{% endblock %}
+
+

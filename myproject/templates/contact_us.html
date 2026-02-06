@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Sa7bi | Gaming Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ef4444;
+            --primary-dark: #991b1b;
+            --primary-light: #fca5a5;
+            --dark-900: #0a0a0f;
+            --dark-800: #12121a;
+            --dark-700: #1a1a24;
+            --dark-600: #22222e;
+            --glass-bg: rgba(18, 18, 26, 0.8);
+            --border-red: rgba(239, 68, 68, 0.2);
+            --glow-red: rgba(239, 68, 68, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-900) 0%, var(--dark-800) 100%);
+            color: #fff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== GRADIENT DOTS BACKGROUND ========== */
+        .gradient-dots-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-color: var(--dark-900);
+            background-image: 
+                radial-gradient(circle, rgba(239, 68, 68, 0.15) 1px, transparent 1px),
+                radial-gradient(circle at 20% 50%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            background-size: 50px 50px, 200% 200%, 200% 200%;
+            background-position: 0 0, 0% 0%, 100% 100%;
+            background-attachment: fixed;
+        }
+
+        /* ========== NAVIGATION ========== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: rgba(18, 18, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1rem 2rem;
+        }
+
+        nav .max-w-7xl {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+        }
+
+        nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            z-index: 10;
+        }
+
+        nav .logo-img {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 0.25rem 0.875rem rgba(239, 68, 68, 0.2);
+        }
+
+        nav .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        nav .nav-links {
+            display: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            nav .nav-links {
+                display: flex;
+            }
+        }
+
+        nav .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav .nav-links a:hover,
+        nav .nav-links a.active {
+            color: var(--primary);
+        }
+
+        nav .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            transition: width 0.3s ease;
+        }
+
+        nav .nav-links a:hover::after,
+        nav .nav-links a.active::after {
+            width: 100%;
+        }
+
+        nav .nav-actions {
+            display: none;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            nav .nav-actions {
+                display: flex;
+            }
+        }
+
+        nav .nav-actions a,
+        nav .nav-actions button {
+            text-decoration: none;
+            color: #ccc;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        nav .nav-actions a:hover {
+            color: var(--primary);
+        }
+
+        nav .btn-register {
+            background: linear-gradient(to right, var(--primary), #000000);
+            color: white !important;
+        }
+
+        nav .btn-register:hover {
+            opacity: 0.9;
+        }
+
+        #mobileMenuBtn {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.5rem;
+            margin-left: auto;
+        }
+
+        @media (min-width: 768px) {
+            #mobileMenuBtn {
+                display: none;
+            }
+        }
+
+        #mobileMenu {
+            display: none;
+            position: fixed;
+            top: 4rem;
+            left: 0;
+            right: 0;
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1rem 2rem;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 40;
+        }
+
+        #mobileMenu.open {
+            display: flex;
+        }
+
+        #mobileMenu a,
+        #mobileMenu button {
+            color: #ccc;
+            text-decoration: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #mobileMenu a:hover,
+        #mobileMenu button:hover {
+            color: var(--primary);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* ========== MAIN CONTAINER ========== */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding-top: 6rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.25rem 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ========== TITLE SECTION ========== */
+        .title-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .title-section h1 {
+            font-size: 2.25rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #fca5a5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (min-width: 640px) {
+            .title-section h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        .title-section .lead {
+            color: #bfc0d6;
+            margin-top: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .title-section .subtitle {
+            color: #9aa0c7;
+            margin-top: 0.375rem;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(255, 202, 202, 0.05); }
+            50% { box-shadow: 0 0 60px rgba(239, 68, 68, 0.5), inset 0 0 40px rgba(255, 202, 202, 0.1); }
+        }
+
+        @keyframes pulse-node {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+
+        /* ========== ORBITAL CONTAINER ========== */
+        .orbital-container {
+            position: relative;
+            width: 680px;
+            height: 680px;
+            margin: 2rem auto;
+        }
+
+        @media (max-width: 820px) {
+            .orbital-container {
+                width: 460px;
+                height: 460px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .orbital-container {
+                width: 320px;
+                height: 320px;
+            }
+        }
+
+        .meteors {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: auto;
+            z-index: 10;
+            border: 1px dashed rgba(239, 68, 68, 0.1);
+        }
+
+        .orbit.glow {
+            box-shadow: 0 0 60px rgba(239, 68, 68, 0.05) inset;
+        }
+
+        /* ========== CENTER ORBS ========== */
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 40;
+            text-align: center;
+        }
+
+        .center-icon {
+            width: 132px;
+            height: 132px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 58px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary) 0%, #991b1b 100%);
+            box-shadow: 0 0 60px rgba(239, 68, 68, 0.3), inset 0 0 30px rgba(255, 202, 202, 0.1);
+            animation: pulseRed 4s ease-in-out infinite;
+        }
+
+        @media (max-width: 820px) {
+            .center-icon {
+                width: 96px;
+                height: 96px;
+                font-size: 40px;
+            }
+        }
+
+        @keyframes pulseRed {
+            0%, 100% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(255, 202, 202, 0.05); }
+            50% { box-shadow: 0 0 60px rgba(239, 68, 68, 0.5), inset 0 0 40px rgba(255, 202, 202, 0.1); }
+        }
+
+        .center-text {
+            margin-top: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .center-subtext {
+            margin-top: 0.375rem;
+            color: #a6a8c9;
+            font-size: 0.95rem;
+        }
+
+        /* ========== NODES ========== */
+        .node {
+            position: absolute;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 50;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.2));
+            border: 2px solid;
+            transition: transform 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease;
+            filter: drop-shadow(0 6px 22px rgba(0, 0, 0, 0.3));
+        }
+
+        @media (max-width: 820px) {
+            .node {
+                width: 56px;
+                height: 56px;
+            }
+        }
+
+        .node:hover {
+            transform: scale(1.08);
+            filter: drop-shadow(0 10px 30px rgba(239, 68, 68, 0.2));
+        }
+
+        .node.active {
+            transform: scale(1.18);
+            filter: drop-shadow(0 18px 60px rgba(239, 68, 68, 0.3));
+        }
+
+        .node.pulse {
+            animation: pulse-node 0.9s ease-in-out;
+        }
+
+        .node-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .node-icon {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+
+        .node-label {
+            font-size: 0.64rem;
+            color: #dee0f7;
+            font-weight: 600;
+        }
+
+        /* ========== CARD ========== */
+        .card {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -420px;
+            width: 92%;
+            max-width: 520px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 1.125rem;
+            padding: 1.625rem;
+            border: 1px solid var(--border-red);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            z-index: 90;
+            transition: bottom 0.45s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .card.show {
+            bottom: 1.375rem;
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 0.5rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--border-red);
+        }
+
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            margin-bottom: 0.375rem;
+            background: linear-gradient(135deg, var(--primary), #fca5a5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-description {
+            color: #bbc0e6;
+            white-space: pre-wrap;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .card-note {
+            color: #96a0d5;
+            font-size: 0.9rem;
+            margin-bottom: 0.625rem;
+            font-style: italic;
+        }
+
+        .card-button {
+            padding: 0.75rem 1.625rem;
+            border-radius: 0.625rem;
+            display: inline-block;
+            color: #fff;
+            font-weight: 800;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .card-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .card-close {
+            position: absolute;
+            right: 0.75rem;
+            top: 0.75rem;
+            width: 2.125rem;
+            height: 2.125rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--border-red);
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .card-close:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* ========== LANGUAGE TOGGLE ========== */
+        .lang-toggle {
+            position: fixed;
+            top: 5.375rem;
+            right: 1.125rem;
+            z-index: 70;
+            background: rgba(139, 92, 246, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.08);
+            border-radius: 1.125rem;
+            padding: 0.375rem;
+            display: flex;
+            gap: 0.625rem;
+        }
+
+        .lang-toggle button {
+            background: none;
+            border: none;
+            color: #dfe3ff;
+            cursor: pointer;
+            padding: 0.375rem 0.625rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .lang-toggle button.active {
+            opacity: 1;
+            background: rgba(236, 72, 153, 0.2);
+            color: var(--primary);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 480px) {
+            .title-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .card {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-dots-bg"></div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav>
+        <div class="max-w-7xl">
+            <a class="logo" href="/">
+                <div class="logo-img">
+                    <img src="https://media.discordapp.net/attachments/1468593183389651210/1468596629698384068/b_i_want_to_be_better-removebg-preview.png?ex=698498b1&is=69834731&hm=1de55b8f0387653b989f62592b1c8e7ebbc35429960195ef32aaa844731224f3&=&format=webp&quality=lossless" alt="Sa7bi Logo">
+                </div>
+            </a>
+
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/shop/">Shop</a>
+                <a href="/#features">Features</a>
+                <a href="/#games">Games</a>
+                <a href="/contact_us.html" class="active">Contact</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="/accounts/login/">Login</a>
+                <a href="/accounts/register/" class="btn-register">Register</a>
+            </div>
+
+            <button id="mobileMenuBtn">☰</button>
+        </div>
+    </nav>
+
+    <!-- ========== MOBILE MENU ========== -->
+    <div id="mobileMenu">
+        <a href="/">Home</a>
+        <a href="/shop/">Shop</a>
+        <a href="/#features">Features</a>
+        <a href="/#games">Games</a>
+        <a href="/contact_us.html" class="active">Contact</a>
+        <div style="border-top: 1px solid rgba(239, 68, 68, 0.2); padding-top: 0.5rem; margin-top: 0.5rem;">
+            <a href="/accounts/login/">Login</a>
+            <a href="/accounts/register/" class="btn-register">Register</a>
+        </div>
+    </div>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="title-section">
+                <h1 id="mainTitle">Get In Touch</h1>
+                <p class="lead" id="mainSubtitle">Choose the fastest way to reach our support team.</p>
+                <div class="subtitle" id="helpText">How can we help you today?</div>
+            </div>
+
+            <!-- ========== ORBITAL VISUALIZATION ========== -->
+            <div class="orbital-container" id="orbital">
+                <div class="meteors" id="meteors"></div>
+
+                <div class="orbit dashed glow" id="orbitA" style="width:440px;height:440px; margin-left:-220px; margin-top:-220px;"></div>
+                <div class="orbit dashed" id="orbitB" style="width:540px;height:540px; margin-left:-270px; margin-top:-270px;"></div>
+                <div class="orbit dashed" id="orbitC" style="width:640px;height:640px; margin-left:-320px; margin-top:-320px;"></div>
+
+                <div class="center">
+                    <div class="center-icon">🎮</div>
+                    <div class="center-text" id="centerText">Sa7bi Support</div>
+                    <div class="center-subtext" id="centerSubtext">Click a channel to connect</div>
+                </div>
+
+                <div class="node" id="node-1" data-idx="0" style="border-color:#5865F2;">
+                    <div class="node-content"><div class="node-icon">💬</div><div class="node-label">Discord</div></div>
+                </div>
+                <div class="node" id="node-2" data-idx="1" style="border-color:#ea4335;">
+                    <div class="node-content"><div class="node-icon">✉️</div><div class="node-label">Email</div></div>
+                </div>
+                <div class="node" id="node-3" data-idx="2" style="border-color:#1DA1F2;">
+                    <div class="node-content"><div class="node-icon">𝕏</div><div class="node-label">Twitter</div></div>
+                </div>
+                <div class="node" id="node-4" data-idx="3" style="border-color:#E1306C;">
+                    <div class="node-content"><div class="node-icon">📸</div><div class="node-label">Instagram</div></div>
+                </div>
+                <div class="node" id="node-5" data-idx="4" style="border-color:#25D366;">
+                    <div class="node-content"><div class="node-icon">💚</div><div class="node-label">WhatsApp</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DETAIL CARD ========== -->
+    <div class="card" id="detailCard">
+        <button class="card-close" onclick="closeCard()">×</button>
+        <div class="card-header">
+            <div class="card-icon" id="cardIcon">💬</div>
+            <h2 class="card-title" id="cardTitle">Discord</h2>
+        </div>
+        <p class="card-description" id="cardDescription">Fastest support – join our community server</p>
+        <p class="card-note" id="cardNote">Recommended for fastest reply</p>
+        <a href="#" id="cardButton" class="card-button" target="_blank">Open Now</a>
+    </div>
+
+    <!-- ========== LANGUAGE TOGGLE ========== -->
+    <div class="lang-toggle">
+        <button class="active" onclick="setLanguage('en')" id="btn-en">EN</button>
+        <button onclick="setLanguage('ar')" id="btn-ar">AR</button>
+    </div>
+
+    <script>
+        const contactMethods = [
+            { id:1, title:{en:'Discord',ar:'ديسكورد'}, icon:'💬', description:{en:'Fastest support – join our community server',ar:'أسرع دعم - انضم إلى خادمنا المجتمعي'}, note:{en:'Recommended for fastest reply',ar:'موصى به للحصول على أسرع رد'}, link:'https://discord.gg/KNMHB26RRh', color:'#5865F2', related:[5] },
+            { id:2, title:{en:'Email',ar:'البريد'}, icon:'✉️', description:{en:'support@sa7bi.gg\nReply within 24 hours',ar:'support@sa7bi.gg\nنرد خلال 24 ساعة'}, note:{en:'Best for detailed inquiries',ar:'الأفضل للاستفسارات التفصيلية'}, link:'mailto:support@sa7bi.gg', color:'#ea4335', related:[1] },
+            { id:3, title:{en:'Twitter',ar:'تويتر'}, icon:'𝕏', description:{en:'@Sa7biSupport – DM us',ar:'@Sa7biSupport - راسلنا'}, note:{en:'Good for public feedback',ar:'جيد للتعليقات العامة'}, link:'https://x.com/Sa7biSupport', color:'#1DA1F2', related:[4] },
+            { id:4, title:{en:'Instagram',ar:'انستجرام'}, icon:'📸', description:{en:'DM for quick questions',ar:'راسلنا للرد السريع'}, note:{en:'Follow for updates',ar:'تابعنا للتحديثات'}, link:'https://instagram.com/sa7bi.gg', color:'#E1306C', related:[3] },
+            { id:5, title:{en:'WhatsApp',ar:'واتس آب'}, icon:'💚', description:{en:'+2126XXXXXXX\n(AR & FR supported)',ar:'+2126XXXXXXX\n(العربية والفرنسية مدعومة)'}, note:{en:'Quick phone support',ar:'دعم هاتفي سريع'}, link:'https://wa.me/2126xxxxxxxx', color:'#25D366', related:[1] }
+        ];
+
+        let currentLanguage = 'en';
+        let isRotating = true;
+        let rotation = 0;
+        let selectedIdx = null;
+
+        function hexToRgba(hex, a = 1) {
+            const h = hex.replace('#', '');
+            const r = parseInt(h.substring(0, 2), 16);
+            const g = parseInt(h.substring(2, 4), 16);
+            const b = parseInt(h.substring(4, 6), 16);
+            return `rgba(${r},${g},${b},${a})`;
+        }
+
+        function shade(hex, percent) {
+            const num = parseInt(hex.slice(1), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return '#' + (0x1000000 + (R < 255 ? R < 0 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 0 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 0 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        function positionNodes() {
+            const radii = [190, 270, 340];
+            const positions = [
+                {r: radii[0], a: -60},
+                {r: radii[1], a: -160},
+                {r: radii[2], a: -40},
+                {r: radii[1], a: 80},
+                {r: radii[0], a: 160}
+            ];
+
+            contactMethods.forEach((c, i) => {
+                const node = document.getElementById('node-' + (i + 1));
+                if (!node) return;
+
+                const p = positions[i];
+                const ang = (p.a * Math.PI) / 180;
+                const x = Math.cos(ang) * p.r;
+                const y = Math.sin(ang) * p.r;
+
+                node.style.left = `calc(50% + ${x}px)`;
+                node.style.top = `calc(50% + ${y}px)`;
+                node.style.borderColor = c.color;
+                node.style.color = c.color;
+                node.style.boxShadow = `0 6px 22px ${hexToRgba(c.color, 0.08)}`;
+                node.querySelector('.node-label').textContent = c.title[currentLanguage];
+                node.addEventListener('click', () => onNodeClick(i));
+            });
+        }
+
+        function startLoop() {
+            setInterval(() => {
+                if (isRotating) {
+                    rotation += 0.4;
+                    document.querySelectorAll('.orbit').forEach((o, idx) => {
+                        o.style.transform = `translate(-50%,-50%) rotate(${rotation * (0.6 + idx * 0.2)}deg)`;
+                    });
+                }
+            }, 40);
+        }
+
+        function updateNodeVisuals(idx) {
+            document.querySelectorAll('.node').forEach((n, i) => {
+                n.classList.toggle('active', i === idx);
+                n.style.boxShadow = (i === idx) ? `0 18px 60px ${hexToRgba(contactMethods[i].color, 0.18)}` : `0 6px 22px ${hexToRgba(contactMethods[i].color, 0.06)}`;
+                n.style.zIndex = i === idx ? 120 : 50;
+            });
+        }
+
+        function highlightRelated(i) {
+            const rel = contactMethods[i].related || [];
+            rel.forEach(id => {
+                const node = document.getElementById('node-' + id);
+                if (node) {
+                    node.classList.add('pulse');
+                    setTimeout(() => node.classList.remove('pulse'), 900);
+                }
+            });
+        }
+
+        function showCard(i) {
+            const c = contactMethods[i];
+            document.getElementById('cardIcon').textContent = c.icon;
+            document.getElementById('cardTitle').textContent = c.title[currentLanguage];
+            document.getElementById('cardDescription').textContent = c.description[currentLanguage];
+            document.getElementById('cardNote').textContent = c.note[currentLanguage];
+            const btn = document.getElementById('cardButton');
+            btn.href = c.link;
+            btn.textContent = (currentLanguage === 'en') ? 'Open Now' : 'اتصل الآن';
+            btn.style.background = `linear-gradient(90deg, ${c.color}, ${shade(c.color, -18)})`;
+            document.getElementById('detailCard').classList.add('show');
+        }
+
+        function onNodeClick(i) {
+            isRotating = false;
+            selectedIdx = i;
+            updateNodeVisuals(i);
+            showCard(i);
+            highlightRelated(i);
+        }
+
+        function closeCard() {
+            isRotating = true;
+            selectedIdx = null;
+            document.getElementById('detailCard').classList.remove('show');
+            document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+        }
+
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            if (btn && menu) {
+                btn.addEventListener('click', () => {
+                    menu.classList.toggle('open');
+                });
+                menu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menu.classList.remove('open');
+                    });
+                });
+            }
+        }
+
+        function setup() {
+            const orbital = document.getElementById('orbital');
+            if (orbital) {
+                orbital.addEventListener('click', (e) => {
+                    if (e.target.id === 'orbital' || e.target.classList.contains('orbit')) {
+                        closeCard();
+                    }
+                });
+            }
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeCard();
+            });
+        }
+
+        function updateLanguage() {
+            const t = {
+                en: {
+                    mainTitle: 'Get In Touch',
+                    mainSubtitle: 'Choose the fastest way to reach our support team.',
+                    helpText: 'How can we help you today?',
+                    centerText: 'Sa7bi Support',
+                    centerSubtext: 'Click a channel to connect'
+                },
+                ar: {
+                    mainTitle: 'تواصل معنا',
+                    mainSubtitle: 'اختر أسرع طريقة للتواصل مع فريق الدعم.',
+                    helpText: 'كيف يمكننا مساعدتك اليوم؟',
+                    centerText: 'دعم Sa7bi',
+                    centerSubtext: 'انقر على قناة للاتصال'
+                }
+            };
+            const tr = t[currentLanguage];
+            document.getElementById('mainTitle').textContent = tr.mainTitle;
+            document.getElementById('mainSubtitle').textContent = tr.mainSubtitle;
+            document.getElementById('helpText').textContent = tr.helpText;
+            document.getElementById('centerText').textContent = tr.centerText;
+            document.getElementById('centerSubtext').textContent = tr.centerSubtext;
+            document.body.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            updateLanguage();
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+            positionNodes();
+            if (selectedIdx !== null) showCard(selectedIdx);
+        }
+
+        function createMeteors() {
+            const container = document.getElementById('meteors');
+            if (!container) return;
+
+            for (let i = 0; i < 5; i++) {
+                const m = document.createElement('div');
+                const size = Math.random() * 3 + 1;
+                m.style.position = 'absolute';
+                m.style.width = size + 'px';
+                m.style.height = '1px';
+                m.style.background = 'linear-gradient(90deg, rgba(239,68,68,0.3), rgba(239,68,68,0))';
+                m.style.left = (Math.random() * 100) + '%';
+                m.style.top = (Math.random() * 100) + '%';
+                m.style.transform = 'rotate(' + (Math.random() * 60 - 30) + 'deg)';
+                m.style.opacity = (Math.random() * 0.65 + 0.15);
+                m.style.filter = 'blur(0.6px)';
+                m.style.pointerEvents = 'none';
+                container.appendChild(m);
+
+                setTimeout(() => {
+                    if (container.contains(m)) {
+                        m.style.transition = 'transform 8s linear, opacity 3s linear';
+                        m.style.transform += ' translateX(-300px)';
+                        m.style.opacity = '0';
+                    }
+                }, 100 + Math.random() * 1000);
+
+                setTimeout(() => {
+                    if (container.contains(m)) {
+                        container.removeChild(m);
+                    }
+                }, 9000);
+            }
+        }
+
+        function init() {
+            console.log('Initializing Contact Page');
+            positionNodes();
+            setup();
+            startLoop();
+            updateLanguage();
+            createMeteors();
+            setupMobileMenu();
+            setInterval(createMeteors, 5500);
+            console.log('Contact Page Initialized');
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

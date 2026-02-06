@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Details - Sa7bi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-content {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .field-group {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.3) 0%, rgba(15, 23, 42, 0.3) 100%);
+            border: 1px solid rgba(71, 85, 105, 0.2);
+        }
+
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .copy-btn.copied {
+            background-color: rgba(34, 197, 94, 0.2);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-14 h-14 rounded-lg transparent flex items-center justify-center overflow-hidden shadow-md">
+                        <img 
+                            src="https://media.discordapp.net/attachments/1468593183389651210/1468596629698384068/b_i_want_to_be_better-removebg-preview.png?ex=698498b1&is=69834731&hm=1de55b8f0387653b989f62592b1c8e7ebbc35429960195ef32aaa844731224f3&=&format=webp&quality=lossless"
+                            alt="Sa7bi Logo"
+                            class="w-14 h-14 object-contain"
+                        >
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="nav-link text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="{% url 'shop:shop_list' %}" class="nav-link text-gray-300 hover:text-white transition-colors">Shop</a>
+                    <a href="/contact" class="nav-link text-gray-300 hover:text-white transition-colors">Contact</a>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'shop:cart' %}" class="relative text-gray-300 hover:text-white transition-colors p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                        </a>
+                        <div class="h-6 w-px bg-gray-700"></div>
+                        <a href="{% url 'shop:dashboard' %}" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">{{ user.username }}</a>
+                        <a href="{% url 'shop:logout' %}" class="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/30 rounded-lg font-semibold hover:bg-red-500/20 transition">Logout</a>
+                    {% else %}
+                        <a href="{% url 'shop:login' %}" class="text-gray-300 hover:text-white transition-colors">Login</a>
+                        <a href="{% url 'shop:register' %}" class="px-4 py-2 bg-gradient-to-r from-red-500 to-black rounded-lg font-semibold hover:opacity-90 transition-opacity">Register</a>
+                    {% endif %}
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden glass border-t border-dark-600">
+            <div class="px-4 py-4 space-y-3">
+                <a href="/" class="block py-2 text-gray-300 hover:text-white">Home</a>
+                <a href="{% url 'shop:shop_list' %}" class="block py-2 text-gray-300 hover:text-white">Shop</a>
+                <a href="/contact" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+                <div class="pt-4 border-t border-dark-600 space-y-2">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'shop:cart' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Cart</a>
+                        <a href="{% url 'shop:dashboard' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Dashboard</a>
+                        <a href="{% url 'shop:logout' %}" class="block w-full py-2 text-center bg-red-500/10 text-red-400 rounded-lg font-semibold">Logout</a>
+                    {% else %}
+                        <a href="{% url 'shop:login' %}" class="block w-full py-2 text-center text-gray-300 hover:text-white">Login</a>
+                        <a href="{% url 'shop:register' %}" class="block w-full py-2 text-center bg-gradient-to-r from-red-500 to-black rounded-lg font-semibold">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="min-h-screen pt-24 pb-16 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Message Header -->
+            <div class="message-content mb-8">
+                <div class="flex items-start justify-between gap-4 mb-6">
+                    <div>
+                        <h1 class="text-4xl font-bold text-white mb-2">{{ message.name }}</h1>
+                        <p class="text-slate-400 text-lg">{{ message.email }}</p>
+                    </div>
+                    <div class="text-right">
+                        {% if not message.is_read %}
+                            <span class="px-4 py-2 bg-red-500 text-white font-bold rounded-lg inline-block">UNREAD</span>
+                        {% else %}
+                            <span class="px-4 py-2 bg-green-500 text-white font-bold rounded-lg inline-block">READ</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Subject and Date -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="field-group rounded-lg p-4">
+                        <p class="text-slate-400 text-sm font-medium mb-2">Subject</p>
+                        <p class="text-xl font-semibold text-white">
+                            {% if message.subject == 'support' %}
+                                🔧 Technical Support
+                            {% elif message.subject == 'sales' %}
+                                💼 Service Inquiry
+                            {% elif message.subject == 'partnership' %}
+                                🤝 Business Partnership
+                            {% elif message.subject == 'complaint' %}
+                                ⚠️ Feedback or Complaint
+                            {% else %}
+                                📌 Other
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="field-group rounded-lg p-4">
+                        <p class="text-slate-400 text-sm font-medium mb-2">Received</p>
+                        <p class="text-xl font-semibold text-white">{{ message.created_at|date:"M d, Y at H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="message-content mb-8">
+                <h2 class="text-xl font-bold text-white mb-4">Contact Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Email -->
+                    <div class="field-group rounded-lg p-4">
+                        <p class="text-slate-400 text-sm font-medium mb-2">Email Address</p>
+                        <div class="flex items-center justify-between">
+                            <a href="mailto:{{ message.email }}" class="text-red-400 hover:text-red-300 text-lg font-medium break-all">
+                                {{ message.email }}
+                            </a>
+                            <button class="copy-btn px-2 py-1 text-slate-400 hover:text-white ml-2" onclick="copyToClipboard('{{ message.email }}')">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phone (if available) -->
+                    <div class="field-group rounded-lg p-4">
+                        <p class="text-slate-400 text-sm font-medium mb-2">Phone Number</p>
+                        {% if message.phone %}
+                            <div class="flex items-center justify-between">
+                                <a href="tel:{{ message.phone }}" class="text-red-400 hover:text-red-300 text-lg font-medium">
+                                    {{ message.phone }}
+                                </a>
+                                <button class="copy-btn px-2 py-1 text-slate-400 hover:text-white ml-2" onclick="copyToClipboard('{{ message.phone }}')">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        {% else %}
+                            <p class="text-slate-500 text-lg">Not provided</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Content -->
+            <div class="message-content mb-8">
+                <h2 class="text-xl font-bold text-white mb-4">Message</h2>
+                <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6">
+                    <p class="text-slate-300 leading-relaxed whitespace-pre-wrap text-lg">{{ message.message }}</p>
+                </div>
+            </div>
+
+            <!-- Metadata -->
+            <div class="message-content">
+                <div class="bg-gradient-to-br from-slate-800/30 to-slate-900/30 border border-slate-700/30 rounded-lg p-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <p class="text-slate-500 font-medium">Message ID</p>
+                            <p class="text-slate-300 font-mono">#{{ message.id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 font-medium">Status</p>
+                            <p class="text-slate-300">{% if message.is_read %}Read{% else %}Unread{% endif %}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 font-medium">Created</p>
+                            <p class="text-slate-300">{{ message.created_at|date:"M d, Y" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 font-medium">Updated</p>
+                            <p class="text-slate-300">{{ message.updated_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function copyToClipboard(text) {
+            const btn = event.target.closest('.copy-btn');
+            navigator.clipboard.writeText(text).then(() => {
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+</html>

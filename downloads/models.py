@@ -1,3 +1,5 @@
+import secrets
+import string
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -39,3 +41,22 @@ class AppVersion(models.Model):
         if self.is_latest:
             AppVersion.objects.filter(is_latest=True).exclude(pk=getattr(self, 'pk', None)).update(is_latest=False)
         super().save(*args, **kwargs)
+
+def generate_activation_code():
+    alphabet = string.ascii_uppercase + string.digits
+    parts = [''.join(secrets.choice(alphabet) for _ in range(5)) for _ in range(3)]
+    candidate = f"SA7BI-{parts[0]}-{parts[1]}-{parts[2]}"
+    while ActivationCode.objects.filter(code=candidate).exists():
+        parts = [''.join(secrets.choice(alphabet) for _ in range(5)) for _ in range(3)]
+        candidate = f"SA7BI-{parts[0]}-{parts[1]}-{parts[2]}"
+    return candidate
+
+class ActivationCode(models.Model):
+    code = models.CharField(max_length=100, unique=True, default=generate_activation_code)
+    hardware_id = models.CharField(max_length=255, blank=True, null=True)
+    used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    duration = models.DurationField(null=True, blank=True)
+
+    def __str__(self):
+        return self.code

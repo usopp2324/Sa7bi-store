@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import FileResponse, Http404
-from .models import AppVersion
+from django.http import FileResponse, Http404, JsonResponse
+from .models import AppVersion, ActivationCode
 from django.conf import settings
 import os
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 
 def download_latest(request):
@@ -43,3 +45,33 @@ def download_file(request, version):
     # Optional: set content type for exe
     response['Content-Type'] = 'application/vnd.microsoft.portable-executable'
     return response
+
+
+@csrf_exempt
+def verify_activation(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        hardware_id = request.POST.get('hardware_id')
+
+        if not code or not hardware_id:
+            return JsonResponse({'status': 'error', 'message': 'Missing code or hardware ID'}, status=400)
+
+        try:
+            ac = ActivationCode.objects.get(code=code)
+            if ac.used:
+                if ac.duration and ac.created_at + ac.duration < timezone.now():
+                    return JsonResponse({'status': 'error', 'message': 'Code expired'}, status=403)
+
+                if ac.hardware_id == hardware_id:
+                    return JsonResponse({'status': 'success'})
+                return JsonResponse({'status': 'error', 'message': 'Code bound to another machine'}, status=403)
+
+            ac.created_at = timezone.now()
+            ac.hardware_id = hardware_id
+            ac.used = True
+            ac.save()
+            return JsonResponse({'status': 'success'})
+        except ActivationCode.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Invalid code'}, status=404)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)

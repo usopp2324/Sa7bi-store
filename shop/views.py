@@ -12,7 +12,8 @@ from django.db.models import Sum, F
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.db.models import Count, Q
 from django.conf import settings
-from .models import Product, Order, OrderItem, UserProfile
+from .models import Product, Order, OrderItem, UserProfile, generate_order_id
+from downloads.models import ActivationCode, generate_activation_code
 from .models import Wishlist, Review
 from .models import ReviewLike
 from .discord_integration import send_order_ticket, check_discord_membership
@@ -146,9 +147,13 @@ def cart_view(request):
     # Build cart items with product data
     cart_items = []
     total_price = Decimal('0.00')
+    missing_product_ids = []
     
     for product_id_str, quantity in cart.items():
-        product = get_object_or_404(Product, id=int(product_id_str))
+        product = Product.objects.filter(id=int(product_id_str)).first()
+        if not product:
+            missing_product_ids.append(product_id_str)
+            continue
         item_subtotal = product.price * quantity
         total_price += item_subtotal
         
@@ -157,6 +162,12 @@ def cart_view(request):
             'quantity': quantity,
             'subtotal': item_subtotal
         })
+
+    if missing_product_ids:
+        for product_id_str in missing_product_ids:
+            cart.pop(product_id_str, None)
+        save_cart(request, cart)
+        messages.warning(request, 'Some items were removed because they are no longer available.')
 
     context = {
         'cart_items': cart_items,
@@ -250,6 +261,9 @@ def checkout_view(request):
         payment_method = request.POST.get('payment_method', '').strip().lower()
         
         # Validate payment method
+        if payment_method == 'paypal':
+            messages.error(request, 'PayPal checkout is handled through SellAuth. Please use the PayPal button with JavaScript enabled.')
+            return redirect('shop:checkout')
         if payment_method != 'discord':
             messages.error(request, 'Please select Discord as the payment method to continue.')
             return redirect('shop:checkout')
@@ -276,6 +290,9 @@ def checkout_view(request):
             if not re.fullmatch(r'\d{17,20}', discord_id_input):
                 messages.error(request, 'Please enter a valid Discord ID (17-20 digits).')
                 return redirect('shop:checkout')
+            if UserProfile.objects.filter(discord_id=discord_id_input).exclude(user=request.user).exists():
+                messages.error(request, 'This Discord ID is already linked to another account. Please contact support.')
+                return redirect('shop:checkout')
             profile.discord_id = discord_id_input
             profile.save(update_fields=['discord_id'])
 
@@ -286,7 +303,7 @@ def checkout_view(request):
         try:
             order = Order.objects.create(
                 user=request.user,
-                order_id=str(uuid.uuid4()),
+                order_id=generate_order_id(),
                 total_price=total_price,
                 status='awaiting_discord',
                 payment_method='discord',
@@ -355,13 +372,84 @@ def checkout_view(request):
             'subtotal': item_subtotal
         })
 
+    sellauth_cart = []
+    missing_sellauth_items = False
+    for item in cart_items:
+        product = item['product']
+        if product.sellauth_product_id and product.sellauth_variant_id:
+            sellauth_cart.append({
+                'productId': int(product.sellauth_product_id),
+                'variantId': int(product.sellauth_variant_id),
+                'quantity': int(item['quantity']),
+            })
+        else:
+            missing_sellauth_items = True
+
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
         'item_count': sum(q for q in cart.values()),
         'needs_discord_id': not bool(getattr(getattr(request.user, 'profile', None), 'discord_id', None)),
+        'sellauth_cart': sellauth_cart,
+        'missing_sellauth_items': missing_sellauth_items,
     }
     return render(request, 'shop/checkout.html', context)
+
+
+@login_required(login_url='shop:login')
+@require_POST
+def sellauth_confirm(request):
+    """Finalize a PayPal/SellAuth checkout by creating a paid order from the session cart."""
+    cart = get_cart(request)
+    if not cart:
+        return JsonResponse({'ok': False, 'error': 'Cart is empty'}, status=400)
+
+    payload = _parse_json_payload(request) or {}
+    first_name = (payload.get('first_name') or '').strip()
+    last_name = (payload.get('last_name') or '').strip()
+    email = (payload.get('email') or '').strip()
+
+    if first_name:
+        request.user.first_name = first_name
+    if last_name:
+        request.user.last_name = last_name
+    if email:
+        request.user.email = email
+    request.user.save(update_fields=['first_name', 'last_name', 'email'])
+
+    total_price = Decimal('0.00')
+    order_items_data = []
+    for product_id_str, quantity in cart.items():
+        product = get_object_or_404(Product, id=int(product_id_str))
+        item_subtotal = product.price * quantity
+        total_price += item_subtotal
+        order_items_data.append({
+            'product': product,
+            'quantity': quantity,
+            'price': product.price,
+        })
+
+    order = Order.objects.create(
+        user=request.user,
+        order_id=generate_order_id(),
+        total_price=total_price,
+        status='paid',
+        payment_method='paypal',
+        payment_status='completed',
+        paid_at=timezone.now(),
+    )
+
+    for item in order_items_data:
+        OrderItem.objects.create(
+            order=order,
+            product=item['product'],
+            quantity=item['quantity'],
+            price=item['price'],
+        )
+
+    save_cart(request, {})
+
+    return JsonResponse({'ok': True, 'order_id': order.order_id})
 
 
 @login_required(login_url='shop:login')
@@ -540,6 +628,39 @@ def discord_order_paid(request):
     return JsonResponse({'ok': True, 'order_id': order.order_id, 'status': 'paid'})
 
 
+@csrf_exempt
+@require_POST
+def discord_activation_create(request):
+    if not _discord_api_authorized(request):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+    payload = _parse_json_payload(request)
+    if not payload:
+        return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
+
+    order_id = (payload.get('order_id') or '').strip()
+    if not order_id:
+        return JsonResponse({'error': 'Missing order_id'}, status=400)
+
+    order = Order.objects.filter(order_id=order_id).select_related('user').first()
+    if not order:
+        return JsonResponse({'error': 'Order not found'}, status=404)
+
+    profile = getattr(order.user, 'profile', None)
+    if not profile or not profile.discord_id:
+        return JsonResponse({'error': 'Discord ID not found for order user'}, status=404)
+
+    code = generate_activation_code()
+    ActivationCode.objects.create(code=code)
+
+    return JsonResponse({
+        'ok': True,
+        'order_id': order.order_id,
+        'discord_id': profile.discord_id,
+        'code': code,
+    })
+
+
 @login_required(login_url='shop:login')
 def cash_success(request):
     """Display success page for cash payment orders"""
@@ -654,7 +775,7 @@ def product_detail(request, slug):
             )
             if eligible_order_items:
                 can_review = True
-
+    
     # Handle review POST
     if request.method == 'POST' and request.POST.get('action') == 'add_review':
         if not request.user.is_authenticated:

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AppVersion
+from .models import AppVersion, ActivationCode
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 
@@ -34,3 +34,9 @@ class AppVersionAdmin(admin.ModelAdmin):
         if obj.is_latest:
             AppVersion.objects.filter(is_latest=True).exclude(pk=getattr(obj, 'pk', None)).update(is_latest=False)
         super().save_model(request, obj, form, change)
+
+
+@admin.register(ActivationCode)
+class ActivationCodeAdmin(admin.ModelAdmin):
+    list_display = ('code', 'used', 'hardware_id')
+    search_fields = ('code', 'hardware_id')

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy — Sa7bi{% endblock %}
+
+{% block content %}
+<section class="relative min-h-screen bg-dark-900 overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute -top-24 left-1/2 h-64 w-[420px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl animate-float-slow"></div>
+    <div class="absolute bottom-16 right-12 h-48 w-48 rounded-full bg-primary/10 blur-2xl animate-float-slower"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800/40 to-dark-900"></div>
+  </div>
+
+  <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm tracking-widest uppercase animate-fade-in">
+        Privacy Policy
+      </div>
+      <h1 class="mt-6 text-4xl sm:text-5xl font-black animate-slide-up">Your data, protected</h1>
+      <p class="mt-4 text-gray-300 animate-slide-up" style="animation-delay: 0.15s;">
+        We respect your privacy and keep your information secure. This policy explains what we collect and why.
+      </p>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise">
+        <h2 class="text-xl font-bold mb-3">Information we collect</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          We collect only the information needed to deliver services, process orders, and provide support.
+          This may include your account details, order history, and communication logs.
+        </p>
+      </div>
+
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise" style="animation-delay: 0.1s;">
+        <h2 class="text-xl font-bold mb-3">How we use data</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          Data is used to fulfill purchases, improve service quality, prevent fraud, and respond to support
+          requests. We do not sell your information.
+        </p>
+      </div>
+
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise" style="animation-delay: 0.2s;">
+        <h2 class="text-xl font-bold mb-3">Security</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          We use industry-standard safeguards, restricted access, and monitoring to keep your data safe.
+        </p>
+      </div>
+
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise" style="animation-delay: 0.3s;">
+        <h2 class="text-xl font-bold mb-3">Contact</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          Questions about this policy? Reach us anytime via the Contact page.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes floatSlow {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes floatSlower {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(16px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes cardRise {
+    0% { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-float-slow { animation: floatSlow 10s ease-in-out infinite; }
+  .animate-float-slower { animation: floatSlower 14s ease-in-out infinite; }
+  .animate-card-rise { animation: cardRise 0.8s ease-out both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float-slow,
+    .animate-float-slower,
+    .animate-card-rise {
+      animation: none !important;
+    }
+  }
+</style>
+{% endblock %}

@@ -17,15 +17,6 @@
     <form method="POST" class="bg-dark-800 rounded-2xl p-8 border border-dark-700">
       {% csrf_token %}
 
-      <!-- Messages -->
-      {% if messages %}
-        {% for message in messages %}
-          <div class="mb-6 p-4 rounded-xl {% if message.tags %}bg-{{ message.tags }}-500/10 text-{{ message.tags }}-400 border border-{{ message.tags }}-500/30{% else %}bg-primary/10 text-primary border border-primary/30{% endif %}">
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-
       <!-- Username Field -->
       <div class="mb-6">
         <label for="username" class="block text-sm font-semibold mb-2">Username</label>

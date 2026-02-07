@@ -68,6 +68,7 @@ def send_order_ticket(order, order_items):
     payload = {
         'discord_id': discord_id,
         'discord_tag': discord_tag,
+        'discord_username': discord_tag,
         'order_id': order.order_id,
         'website_username': order.user.username,
         'name': f"{order.user.first_name} {order.user.last_name}".strip(),
@@ -101,3 +102,66 @@ def send_order_ticket(order, order_items):
         logger.warning('Bot ticket request failed: %s', exc)
 
     return None
+
+
+def register_pending_order(order, order_items):
+    discord_id = getattr(getattr(order.user, 'profile', None), 'discord_id', None)
+    discord_tag = getattr(getattr(order.user, 'profile', None), 'discord_username', None)
+    if not discord_id:
+        logger.info('No discord_id for user %s; skipping pending registration', order.user_id)
+        return False
+
+    base_url = _get_bot_api_base_url()
+    if not base_url or not settings.BOT_API_SECRET:
+        logger.warning('BOT_API_BASE_URL/BOT_API_URL or BOT_API_SECRET is missing; skipping pending registration')
+        return False
+
+    site_url = (getattr(settings, 'SITE_URL', '') or '').rstrip('/')
+
+    def _build_image_url(image_field):
+        if not image_field:
+            return None
+        try:
+            url = image_field.url
+        except ValueError:
+            return None
+        if site_url and url.startswith('/'):
+            return f"{site_url}{url}"
+        return url
+
+    payload = {
+        'discord_id': discord_id,
+        'discord_tag': discord_tag,
+        'discord_username': discord_tag,
+        'order_id': order.order_id,
+        'website_username': order.user.username,
+        'name': f"{order.user.first_name} {order.user.last_name}".strip(),
+        'email': order.user.email,
+        'payment_method': order.payment_method,
+        'status': 'Pending',
+        'total_price': str(order.total_price),
+        'items': [
+            {
+                'name': item.product.name,
+                'quantity': item.quantity,
+                'price': str(item.price),
+                'image_url': _build_image_url(getattr(item.product, 'image', None)),
+            }
+            for item in order_items
+        ],
+    }
+
+    try:
+        response = requests.post(
+            f"{base_url}/api/order/pending",
+            json=payload,
+            headers={'X-API-Key': settings.BOT_API_SECRET},
+            timeout=10,
+        )
+        if response.ok:
+            return True
+        logger.warning('Pending registration failed: %s %s', response.status_code, response.text)
+    except requests.RequestException as exc:
+        logger.warning('Pending registration failed: %s', exc)
+
+    return False

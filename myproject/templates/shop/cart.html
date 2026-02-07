@@ -12,14 +12,6 @@
     <p class="text-gray-400 text-lg">Review your items before checkout</p>
   </header>
 
-  {% if messages %}
-    {% for message in messages %}
-      <div class="mb-6 p-4 rounded-xl bg-green-500/10 text-green-400 border border-green-500/30">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-
   {% if cart_items %}
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Cart Items -->
@@ -55,7 +47,7 @@
                 <div class="mt-3 flex items-center gap-4">
                   <div>
                     <p class="text-xs text-gray-500 uppercase">Price</p>
-                    <p class="text-lg font-bold text-primary">${{ item.product.price }}</p>
+                    <p class="text-lg font-bold text-primary">€{{ item.product.price }}</p>
                   </div>
                   <div>
                     <p class="text-xs text-gray-500 uppercase">Quantity</p>
@@ -74,7 +66,7 @@
                   </div>
                   <div>
                     <p class="text-xs text-gray-500 uppercase">Subtotal</p>
-                    <p class="text-lg font-bold">${{ item.subtotal }}</p>
+                    <p class="text-lg font-bold">€{{ item.subtotal }}</p>
                   </div>
                 </div>
               </div>
@@ -104,7 +96,7 @@
         <div class="mb-6 pb-6 border-b border-dark-700">
           <div class="flex justify-between text-sm mb-2">
             <span class="text-gray-400">Subtotal</span>
-            <span class="text-white">${{ total_price }}</span>
+            <span class="text-white">€{{ total_price }}</span>
           </div>
           <div class="flex justify-between text-sm mb-2">
             <span class="text-gray-400">Shipping</span>
@@ -112,7 +104,7 @@
           </div>
           <div class="flex justify-between text-sm">
             <span class="text-gray-400">Tax (0%)</span>
-            <span class="text-white">$0.00</span>
+            <span class="text-white">€0.00</span>
           </div>
         </div>
 
@@ -120,7 +112,7 @@
         <div class="mb-6">
           <div class="flex justify-between items-center mb-4">
             <span class="text-lg font-bold">Total</span>
-            <span class="text-3xl font-black gradient-text">${{ total_price }}</span>
+            <span class="text-3xl font-black gradient-text">€{{ total_price }}</span>
           </div>
         </div>
 

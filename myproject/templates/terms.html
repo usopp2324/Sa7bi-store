@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service — Sa7bi{% endblock %}
+
+{% block content %}
+<section class="relative min-h-screen bg-dark-900 overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute -top-24 left-1/3 h-56 w-56 rounded-full bg-primary/10 blur-2xl animate-float-slow"></div>
+    <div class="absolute bottom-20 right-1/4 h-72 w-[420px] rounded-full bg-primary/10 blur-3xl animate-float-slower"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800/40 to-dark-900"></div>
+  </div>
+
+  <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm tracking-widest uppercase animate-fade-in">
+        Terms of Service
+      </div>
+      <h1 class="mt-6 text-4xl sm:text-5xl font-black animate-slide-up">Clear rules, fair service</h1>
+      <p class="mt-4 text-gray-300 animate-slide-up" style="animation-delay: 0.15s;">
+        These terms explain how our services work and what you can expect from Sa7bi.
+      </p>
+    </div>
+
+    <div class="space-y-6">
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise">
+        <h2 class="text-xl font-bold mb-3">Service access</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          Access is provided after successful payment and confirmation. We reserve the right to refuse
+          service if requests violate our policies or platform rules.
+        </p>
+      </div>
+
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise" style="animation-delay: 0.1s;">
+        <h2 class="text-xl font-bold mb-3">User responsibilities</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          You are responsible for providing accurate information and maintaining account security.
+          Misuse or fraud may result in suspension.
+        </p>
+      </div>
+
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise" style="animation-delay: 0.2s;">
+        <h2 class="text-xl font-bold mb-3">Refunds</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          No refunds are provided after service delivery. If you experience issues, contact support for assistance.
+        </p>
+      </div>
+
+      <div class="bg-dark-800/70 border border-dark-600 rounded-2xl p-6 backdrop-blur-sm animate-card-rise" style="animation-delay: 0.3s;">
+        <h2 class="text-xl font-bold mb-3">Updates</h2>
+        <p class="text-sm text-gray-300 leading-relaxed">
+          We may update these terms periodically. Continued use of our services implies acceptance
+          of the latest terms.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes floatSlow {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes floatSlower {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(16px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes cardRise {
+    0% { opacity: 0; transform: translateY(16px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-float-slow { animation: floatSlow 10s ease-in-out infinite; }
+  .animate-float-slower { animation: floatSlower 14s ease-in-out infinite; }
+  .animate-card-rise { animation: cardRise 0.8s ease-out both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float-slow,
+    .animate-float-slower,
+    .animate-card-rise {
+      animation: none !important;
+    }
+  }
+</style>
+{% endblock %}

@@ -15,7 +15,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Checkout Form -->
     <div class="lg:col-span-2">
-      <form method="POST" class="space-y-8">
+      <form method="POST" class="space-y-8" id="checkout-form">
         {% csrf_token %}
 
         <!-- Shipping Address -->
@@ -64,7 +64,7 @@
           </h2>
 
           {% if needs_discord_id %}
-          <div class="mb-6 p-4 rounded-xl bg-dark-700/60 border border-dark-600">
+          <div class="mb-6 p-4 rounded-xl bg-dark-700/60 border border-dark-600" id="discord-id-block">
             <label class="block text-sm font-semibold mb-2">Discord ID</label>
             <input
               type="text"
@@ -77,6 +77,24 @@
           </div>
           {% endif %}
 
+          <div class="grid grid-cols-1 py-5 gap-4">
+            <label class="payment-card p-5 rounded-2xl border border-dark-600 bg-dark-700/60 cursor-pointer transition-all" data-payment-card="paypal">
+              <input type="radio" name="payment_method" value="paypal" class="sr-only" aria-label="Pay with PayPal" required>
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-[#0070BA]/15 border border-[#0070BA]/40 flex items-center justify-center">
+                  <svg class="w-7 h-7 text-[#8EC7FF]" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M239.9 359.9C236.4 379.1 222.5 468.6 218.4 493.9C218.1 495.7 217.4 496.4 215.4 496.4L140.8 496.4C133.2 496.4 127.7 489.8 128.7 482.5L187.3 110.6C188.8 101 197.4 93.7 207.3 93.7C359.6 93.7 372.4 90 411.3 105.1C471.4 128.4 476.9 184.6 455.3 245.4C433.8 308 382.8 334.9 315.2 335.7C271.8 336.4 245.7 328.7 239.9 359.9zM485.6 216C483.8 214.7 483.1 214.2 482.6 217.3C480.6 228.7 477.5 239.8 473.8 250.9C433.9 364.7 323.3 354.8 269.3 354.8C263.2 354.8 259.2 358.1 258.4 364.2C235.8 504.6 231.3 533.9 231.3 533.9C230.3 541 234.8 546.8 241.9 546.8L305.4 546.8C314 546.8 321.1 540.5 322.8 531.9C323.5 526.5 321.7 538 337.2 440.6C341.8 418.6 351.5 420.9 366.5 420.9C437.5 420.9 492.9 392.1 509.4 308.6C515.9 273.8 514 237.2 485.6 216z"/></svg>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <div class="font-semibold text-white text-lg">PayPal</div>
+                    <span class="text-xs text-primary">SellAuth</span>
+                  </div>
+                  <p class="text-sm text-gray-400 mt-1">Instant checkout via PayPal using SellAuth.</p>
+                </div>
+              </div>
+            </label>
+
+          </div>
           <div class="grid grid-cols-1 gap-4">
             <label class="payment-card p-5 rounded-2xl border border-dark-600 bg-dark-700/60 cursor-pointer transition-all">
               <input type="radio" name="payment_method" value="discord" class="sr-only" aria-label="Pay via Discord" required>
@@ -89,15 +107,20 @@
                 <div class="flex-1">
                   <div class="flex items-center justify-between">
                     <div class="font-semibold text-white text-lg">Pay via Discord</div>
-                    <span class="text-xs uppercase tracking-wider text-[#8EA1FF]">Only option</span>
                   </div>
                   <p class="text-sm text-gray-400 mt-1">Complete payment and delivery coordination inside our Discord server.</p>
                 </div>
               </div>
             </label>
           </div>
+           
 
-          <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-100 text-sm">
+          <div id="paypal-warning" class="mt-4 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-100 text-sm hidden">
+            <p class="font-semibold">PayPal checkout is unavailable for one or more items.</p>
+            <p class="text-xs mt-1">Please choose Discord or update product SellAuth IDs in the admin panel.</p>
+          </div>
+
+          <div id="payment-steps" class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-100 text-sm">
             <p class="font-semibold mb-2">Next steps after placing the order:</p>
             <ul class="list-disc list-inside space-y-1 text-xs">
               <li>Join our Discord server</li>
@@ -118,9 +141,11 @@
 
         <!-- Place Order Button -->
         <button
-          type="submit"
+          type="button"
           id="place-order-btn"
           disabled
+          data-confirm-url="{% url 'shop:sellauth_confirm' %}"
+          data-success-url-template="{% url 'shop:payment_success' order_id='__ORDER_ID__' %}"
           class="w-full btn-buy bg-gradient-to-r from-primary to-secondary text-white font-semibold py-4 rounded-xl transition-all text-lg opacity-50 cursor-not-allowed"
         >
           Place Order
@@ -145,7 +170,7 @@
               <p class="text-white font-medium">{{ item.product.name }}</p>
               <p class="text-gray-400 text-xs">Qty: {{ item.quantity }}</p>
             </div>
-            <p class="text-right font-semibold">${{ item.subtotal }}</p>
+            <p class="text-right font-semibold">€{{ item.subtotal }}</p>
           </div>
           {% endfor %}
         </div>
@@ -154,7 +179,7 @@
         <div class="space-y-2 mb-6">
           <div class="flex justify-between text-sm text-gray-400">
             <span>Subtotal</span>
-            <span>${{ total_price }}</span>
+            <span id="subtotal-amount" data-subtotal="{{ total_price }}">€{{ total_price }}</span>
           </div>
           <div class="flex justify-between text-sm text-gray-400">
             <span>Shipping</span>
@@ -162,7 +187,7 @@
           </div>
           <div class="flex justify-between text-sm text-gray-400">
             <span>Tax</span>
-            <span>$0.00</span>
+            <span id="tax-amount">€0.00</span>
           </div>
         </div>
 
@@ -170,7 +195,7 @@
         <div class="pt-4 border-t border-dark-700">
           <div class="flex justify-between items-center">
             <span class="font-bold">Total</span>
-            <span class="text-2xl font-black gradient-text">${{ total_price }}</span>
+            <span id="total-amount" class="text-2xl font-black gradient-text">€{{ total_price }}</span>
           </div>
         </div>
 
@@ -222,20 +247,73 @@
   }
 </style>
 
+{{ sellauth_cart|json_script:"sellauth-cart" }}
+
+<script src="https://sellauth.com/assets/js/sellauth-embed-2.js"></script>
 <script>
   const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
   const placeOrderButton = document.getElementById('place-order-btn');
   const paymentCards = document.querySelectorAll('.payment-card');
+  const checkoutForm = document.getElementById('checkout-form');
+  const paymentSteps = document.getElementById('payment-steps');
+  const discordIdBlock = document.getElementById('discord-id-block');
+  const paypalWarning = document.getElementById('paypal-warning');
+  const paypalRadio = document.querySelector('input[name="payment_method"][value="paypal"]');
+  const paypalCard = document.querySelector('[data-payment-card="paypal"]');
+  const subtotalAmount = document.getElementById('subtotal-amount');
+  const taxAmount = document.getElementById('tax-amount');
+  const totalAmount = document.getElementById('total-amount');
+  const sellauthCart = JSON.parse(document.getElementById('sellauth-cart').textContent || '[]');
+  const missingSellauthItems = {{ missing_sellauth_items|yesno:"true,false" }};
+  const shopId = 214492;
+  const baseSubtotal = subtotalAmount ? Number(subtotalAmount.dataset.subtotal || 0) : 0;
+  const paypalTax = 2.0;
+
+  const formatCurrency = (value) => `€${value.toFixed(2)}`;
 
   const updatePaymentState = () => {
     const selected = document.querySelector('input[name="payment_method"]:checked');
+    const method = selected ? selected.value : null;
     const isSelected = Boolean(selected);
+    const isPaypal = method === 'paypal';
+    const isDiscord = method === 'discord';
+    const paypalEnabled = !missingSellauthItems && sellauthCart.length > 0;
 
-    placeOrderButton.disabled = !isSelected;
-    placeOrderButton.classList.toggle('opacity-50', !isSelected);
-    placeOrderButton.classList.toggle('cursor-not-allowed', !isSelected);
-    placeOrderButton.classList.toggle('hover:shadow-lg', isSelected);
-    placeOrderButton.classList.toggle('hover:-translate-y-0.5', isSelected);
+    if (paypalRadio && missingSellauthItems) {
+      paypalRadio.disabled = true;
+      if (paypalRadio.checked) {
+        paypalRadio.checked = false;
+      }
+      if (paypalCard) {
+        paypalCard.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+      if (paypalWarning) {
+        paypalWarning.classList.remove('hidden');
+      }
+    } else if (paypalWarning) {
+      paypalWarning.classList.add('hidden');
+    }
+
+    placeOrderButton.disabled = !isSelected || (isPaypal && !paypalEnabled);
+    placeOrderButton.classList.toggle('opacity-50', placeOrderButton.disabled);
+    placeOrderButton.classList.toggle('cursor-not-allowed', placeOrderButton.disabled);
+    placeOrderButton.classList.toggle('hover:shadow-lg', !placeOrderButton.disabled);
+    placeOrderButton.classList.toggle('hover:-translate-y-0.5', !placeOrderButton.disabled);
+
+    if (paymentSteps) {
+      paymentSteps.classList.toggle('hidden', !isDiscord);
+    }
+    if (discordIdBlock) {
+      discordIdBlock.classList.toggle('hidden', !isDiscord);
+    }
+
+    if (taxAmount && totalAmount) {
+      const taxValue = isPaypal ? paypalTax : 0;
+      taxAmount.textContent = formatCurrency(taxValue);
+      totalAmount.textContent = formatCurrency(baseSubtotal + taxValue);
+    }
+
+    placeOrderButton.textContent = isPaypal ? 'Pay with PayPal' : 'Place Order';
 
     paymentCards.forEach((card) => {
       const input = card.querySelector('input');
@@ -247,8 +325,72 @@
     });
   };
 
+  const confirmSellAuthOrder = async () => {
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
+    const payload = {
+      first_name: checkoutForm.querySelector('input[name="first_name"]')?.value || '',
+      last_name: checkoutForm.querySelector('input[name="last_name"]')?.value || '',
+      email: checkoutForm.querySelector('input[name="email"]')?.value || '',
+    };
+
+    const response = await fetch(placeOrderButton.dataset.confirmUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error('Unable to confirm payment.');
+    }
+
+    return response.json();
+  };
+
+  const launchSellAuth = async () => {
+    if (!window.sellAuthEmbed) {
+      alert('SellAuth is not available. Please try again.');
+      return;
+    }
+
+    window.sellAuthEmbed.checkout(placeOrderButton, {
+      cart: sellauthCart,
+      shopId,
+      modal: true,
+      onSuccess: async () => {
+        try {
+          const result = await confirmSellAuthOrder();
+          if (result && result.ok && result.order_id) {
+            const successUrl = placeOrderButton.dataset.successUrlTemplate.replace('__ORDER_ID__', result.order_id);
+            window.location.href = successUrl;
+          } else {
+            alert('Payment completed, but order confirmation failed.');
+          }
+        } catch (error) {
+          alert('Payment completed, but order confirmation failed.');
+        }
+      },
+    });
+  };
+
   paymentRadios.forEach((radio) => {
     radio.addEventListener('change', updatePaymentState);
+  });
+
+  placeOrderButton.addEventListener('click', (event) => {
+    const selected = document.querySelector('input[name="payment_method"]:checked');
+    if (!selected) {
+      return;
+    }
+
+    if (selected.value === 'paypal') {
+      event.preventDefault();
+      launchSellAuth();
+    } else {
+      checkoutForm.submit();
+    }
   });
 
   updatePaymentState();

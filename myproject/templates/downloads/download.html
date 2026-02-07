@@ -21,7 +21,7 @@
           <i class="fa-brands fa-windows mr-2"></i>Windows Desktop App
         </span>
       </div>
-      <h1 class="text-5xl md:text-6xl font-bold gradient-text mb-4">Sa7bi Desktop</h1>
+      <h1 class="text-5xl md:text-6xl font-bold  mb-4">Sa7bi <span class="gradient-text">Desktop</span></h1>
       <p class="text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
         Experience seamless performance with the official Sa7bi desktop application. Optimized for Windows, packed with features.
       </p>
@@ -55,7 +55,15 @@
                 <div class="flex flex-wrap gap-4">
                   <div class="bg-dark-700/50 rounded-lg p-3 border border-gray-700">
                     <div class="text-xs text-gray-500 uppercase tracking-wider">File Size</div>
-                    <div class="text-lg font-semibold">{{ version.file_size }}</div>
+                    <div class="text-lg font-semibold">
+                      {% if version.exe_file %}
+                        {{ version.exe_file.size|filesizeformat }}
+                      {% elif version.file_size %}
+                        {{ version.file_size }}
+                      {% else %}
+                        N/A
+                      {% endif %}
+                    </div>
                   </div>
                   <div class="bg-dark-700/50 rounded-lg p-3 border border-gray-700">
                     <div class="text-xs text-gray-500 uppercase tracking-wider">Platform</div>
@@ -67,7 +75,7 @@
               <!-- Download Section -->
               <div class="flex flex-col justify-center items-center md:items-end gap-6">
                 <a href="{% url 'downloads:download_file' version.version_number %}" class="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary to-primary-dark rounded-xl font-bold text-white text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden">
-                  <div class="absolute inset-0 bg-white/20 translate-y-12 group-hover:translate-y-0 transition-transform duration-300"></div>
+                  <div class="absolute inset-0  translate-y-12 group-hover:translate-y-0 transition-transform duration-300"></div>
                   <i class="fa-solid fa-download mr-3 text-xl"></i>
                   <span class="relative">Download Now</span>
                 </a>
@@ -80,8 +88,14 @@
                   <div class="text-xs text-gray-500 mb-2 uppercase tracking-wider">System Requirements</div>
                   <ul class="text-sm text-gray-300 space-y-1">
                     <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Windows 10 or later</li>
-                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i>2GB RAM minimum</li>
-                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i>100MB free disk space</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i>1GB RAM minimum</li>
+                    <li><i class="fa-solid fa-check text-green-500 mr-2"></i> {% if version.exe_file %}
+                        {{ version.exe_file.size|filesizeformat }}
+                      {% elif version.file_size %}
+                        {{ version.file_size }}
+                      {% else %}
+                        N/A
+                      {% endif %} free disk space</li>
                   </ul>
                 </div>
               </div>
@@ -106,7 +120,15 @@
                 </div>
                 <div class="flex items-center gap-4 text-xs text-gray-500">
                   <span><i class="fa-solid fa-calendar mr-1"></i>{{ v.release_date|date:'M j, Y' }}</span>
-                  <span><i class="fa-solid fa-database mr-1"></i>{{ v.file_size }}</span>
+                  <span><i class="fa-solid fa-database mr-1"></i>
+                    {% if v.exe_file %}
+                      {{ v.exe_file.size|filesizeformat }}
+                    {% elif v.file_size %}
+                      {{ v.file_size }}
+                    {% else %}
+                      N/A
+                    {% endif %}
+                  </span>
                 </div>
               </a>
             {% endfor %}
@@ -125,9 +147,7 @@
             </div>
             <h2 class="text-2xl font-bold mb-2">No Downloads Available Yet</h2>
             <p class="text-gray-400 mb-6">App versions are managed in the admin panel. Check back soon for the official release!</p>
-            <a href="/admin/downloads/appversion/" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary to-primary-dark rounded-lg font-semibold text-white hover:shadow-lg transform hover:scale-105 transition-all">
-              <i class="fa-solid fa-plus mr-2"></i>Add First Release (Admin)
-            </a>
+            
           </div>
         </div>
       </div>

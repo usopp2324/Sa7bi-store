@@ -78,7 +78,7 @@
             <div class="flex flex-wrap gap-6">
               <div>
                 <p class="text-xs text-gray-500 uppercase">Unit Price</p>
-                <p class="text-lg font-bold text-primary">${{ item.price }}</p>
+                <p class="text-lg font-bold text-primary">€{{ item.price }}</p>
               </div>
               <div>
                 <p class="text-xs text-gray-500 uppercase">Quantity</p>
@@ -86,7 +86,7 @@
               </div>
               <div>
                 <p class="text-xs text-gray-500 uppercase">Subtotal</p>
-                <p class="text-lg font-bold">${{ item.subtotal }}</p>
+                <p class="text-lg font-bold">€{{ item.subtotal }}</p>
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@
       <div class="space-y-3">
         <div class="flex justify-between text-sm">
           <span class="text-gray-400">Subtotal</span>
-          <span class="text-white">${{ order.total_price }}</span>
+          <span class="text-white">€{{ order.total_price }}</span>
         </div>
         <div class="flex justify-between text-sm">
           <span class="text-gray-400">Shipping</span>
@@ -130,11 +130,11 @@
         </div>
         <div class="flex justify-between text-sm">
           <span class="text-gray-400">Tax</span>
-          <span class="text-white">$0.00</span>
+          <span class="text-white">€0.00</span>
         </div>
         <div class="pt-3 border-t border-dark-700 flex justify-between">
           <span class="font-bold">Total</span>
-          <span class="text-2xl font-black gradient-text">${{ order.total_price }}</span>
+          <span class="text-2xl font-black gradient-text">€{{ order.total_price }}</span>
         </div>
       </div>
     </div>

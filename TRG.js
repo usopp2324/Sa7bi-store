@@ -1,9 +1,43 @@
 const { fail } = require('assert');
 const { channel } = require('diagnostics_channel');
-const { Client, GatewayIntentBits, PermissionFlagsBits, EmbedBuilder, ChannelType, PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder, ComponentType, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const Discord = require('discord.js');
+const {
+    Client,
+   
+    ModalBuilder: DiscordModalBuilder,
+    TextInputBuilder: DiscordTextInputBuilder,
+    TextInputStyle: DiscordTextInputStyle,
+    ComponentType: DiscordComponentType,
+    ButtonStyle: DiscordButtonStyle,
+} = Discord;
+const GatewayIntentBits = Discord.GatewayIntentBits || (Discord.Intents && Discord.Intents.FLAGS) || {};
+const PermissionFlagsBits = Discord.PermissionFlagsBits || (Discord.Permissions && Discord.Permissions.FLAGS) || {};
+const EmbedBuilder = Discord.EmbedBuilder || Discord.MessageEmbed;
+const ActionRowBuilder = Discord.ActionRowBuilder || Discord.MessageActionRow;
+const StringSelectMenuBuilder = Discord.StringSelectMenuBuilder || Discord.MessageSelectMenu;
+const ButtonBuilder = Discord.ButtonBuilder || Discord.MessageButton;
+const ModalBuilder = DiscordModalBuilder || Discord.Modal;
+const TextInputBuilder = DiscordTextInputBuilder || Discord.TextInputComponent;
+const TextInputStyle = DiscordTextInputStyle || { Short: 'SHORT', Paragraph: 'PARAGRAPH' };
+const ComponentType = DiscordComponentType || { Button: 'BUTTON', StringSelect: 'SELECT_MENU' };
+const ButtonStyle = DiscordButtonStyle || {
+    Primary: 'PRIMARY',
+    Secondary: 'SECONDARY',
+    Success: 'SUCCESS',
+    Danger: 'DANGER',
+};
+const ChannelType = Discord.ChannelType || {
+    GuildCategory: 'GUILD_CATEGORY',
+    GuildText: 'GUILD_TEXT',
+    GuildVoice: 'GUILD_VOICE',
+};
 const { NONAME } = require('dns');
 const { userInfo } = require('os');
 const fs = require('fs').promises;
+const countries = require('./bot/trg/data/countries');
+const brands = require('./bot/trg/data/brands');
+const commandCategories = require('./bot/trg/commandCategories');
+const embedConfig = require('./bot/trg/embedConfig');
 
             const sharedClient = global.__siteBotClient;
             const client = sharedClient || new Client({
@@ -74,219 +108,6 @@ const fs = require('fs').promises;
             let jailedUsers = new Map();
             let marriages = new Map();
             let children = new Map();
-            const countries = [
-            { name: 'Dominica', flag: 'https://flagcdn.com/w320/dm.png' },
-            { name: 'Dominican Republic', flag: 'https://flagcdn.com/w320/do.png' },
-            { name: 'Ecuador', flag: 'https://flagcdn.com/w320/ec.png' },
-            { name: 'Egypt', flag: 'https://flagcdn.com/w320/eg.png' },
-            { name: 'El Salvador', flag: 'https://flagcdn.com/w320/sv.png' },
-            { name: 'Equatorial Guinea', flag: 'https://flagcdn.com/w320/gq.png' },
-            { name: 'Eritrea', flag: 'https://flagcdn.com/w320/er.png' },
-            { name: 'Estonia', flag: 'https://flagcdn.com/w320/ee.png' },
-            { name: 'Eswatini', flag: 'https://flagcdn.com/w320/sz.png' },
-            { name: 'Ethiopia', flag: 'https://flagcdn.com/w320/et.png' },
-            { name: 'Fiji', flag: 'https://flagcdn.com/w320/fj.png' },
-            { name: 'Finland', flag: 'https://flagcdn.com/w320/fi.png' },
-            { name: 'France', flag: 'https://flagcdn.com/w320/fr.png' },
-            { name: 'Gabon', flag: 'https://flagcdn.com/w320/ga.png' },
-            { name: 'Gambia', flag: 'https://flagcdn.com/w320/gm.png' },
-            { name: 'Georgia', flag: 'https://flagcdn.com/w320/ge.png' },
-            { name: 'Germany', flag: 'https://flagcdn.com/w320/de.png' },
-            { name: 'Ghana', flag: 'https://flagcdn.com/w320/gh.png' },
-            { name: 'Greece', flag: 'https://flagcdn.com/w320/gr.png' },
-            { name: 'Grenada', flag: 'https://flagcdn.com/w320/gd.png' },
-            { name: 'Guatemala', flag: 'https://flagcdn.com/w320/gt.png' },
-            { name: 'Guinea', flag: 'https://flagcdn.com/w320/gn.png' },
-            { name: 'Guinea-Bissau', flag: 'https://flagcdn.com/w320/gw.png' },
-            { name: 'Guyana', flag: 'https://flagcdn.com/w320/gy.png' },
-            { name: 'Haiti', flag: 'https://flagcdn.com/w320/ht.png' },
-            { name: 'Honduras', flag: 'https://flagcdn.com/w320/hn.png' },
-            { name: 'Hungary', flag: 'https://flagcdn.com/w320/hu.png' },
-            { name: 'Iceland', flag: 'https://flagcdn.com/w320/is.png' },
-            { name: 'India', flag: 'https://flagcdn.com/w320/in.png' },
-            { name: 'Indonesia', flag: 'https://flagcdn.com/w320/id.png' },
-            { name: 'Iran', flag: 'https://flagcdn.com/w320/ir.png' },
-            { name: 'Iraq', flag: 'https://flagcdn.com/w320/iq.png' },
-            { name: 'Ireland', flag: 'https://flagcdn.com/w320/ie.png' },
-            { name: 'Israel', flag: 'https://flagcdn.com/w320/il.png' },
-            { name: 'Italy', flag: 'https://flagcdn.com/w320/it.png' },
-            { name: 'Jamaica', flag: 'https://flagcdn.com/w320/jm.png' },
-            { name: 'Japan', flag: 'https://flagcdn.com/w320/jp.png' },
-            { name: 'Jordan', flag: 'https://flagcdn.com/w320/jo.png' },
-            { name: 'Kazakhstan', flag: 'https://flagcdn.com/w320/kz.png' },
-            { name: 'Kenya', flag: 'https://flagcdn.com/w320/ke.png' },
-            { name: 'Kiribati', flag: 'https://flagcdn.com/w320/ki.png' },
-            { name: 'Kuwait', flag: 'https://flagcdn.com/w320/kw.png' },
-            { name: 'Kyrgyzstan', flag: 'https://flagcdn.com/w320/kg.png' },
-            { name: 'Laos', flag: 'https://flagcdn.com/w320/la.png' },
-            { name: 'Latvia', flag: 'https://flagcdn.com/w320/lv.png' },
-            { name: 'Lebanon', flag: 'https://flagcdn.com/w320/lb.png' },
-            { name: 'Lesotho', flag: 'https://flagcdn.com/w320/ls.png' },
-            { name: 'Liberia', flag: 'https://flagcdn.com/w320/lr.png' },
-            { name: 'Libya', flag: 'https://flagcdn.com/w320/ly.png' },
-            { name: 'Liechtenstein', flag: 'https://flagcdn.com/w320/li.png' },
-            { name: 'Lithuania', flag: 'https://flagcdn.com/w320/lt.png' },
-            { name: 'Luxembourg', flag: 'https://flagcdn.com/w320/lu.png' },
-            { name: 'Madagascar', flag: 'https://flagcdn.com/w320/mg.png' },
-            { name: 'Malawi', flag: 'https://flagcdn.com/w320/mw.png' },
-            { name: 'Malaysia', flag: 'https://flagcdn.com/w320/my.png' },
-        ];
-        const brands = [
-        { name: 'Apple', logo: 'https://logo.clearbit.com/apple.com' },
-        { name: 'Microsoft', logo: 'https://logo.clearbit.com/microsoft.com' },
-        { name: 'Amazon', logo: 'https://logo.clearbit.com/amazon.com' },
-        { name: 'Google', logo: 'https://logo.clearbit.com/google.com' },
-        { name: 'Facebook', logo: 'https://logo.clearbit.com/facebook.com' },
-        { name: 'Tesla', logo: 'https://logo.clearbit.com/tesla.com' },
-        { name: 'Nike', logo: 'https://logo.clearbit.com/nike.com' },
-        { name: 'Adidas', logo: 'https://logo.clearbit.com/adidas.com' },
-        { name: 'Netflix', logo: 'https://logo.clearbit.com/netflix.com' },
-        { name: 'Twitter', logo: 'https://logo.clearbit.com/twitter.com' },
-        { name: 'LinkedIn', logo: 'https://logo.clearbit.com/linkedin.com' },
-        { name: 'YouTube', logo: 'https://logo.clearbit.com/youtube.com' },
-        { name: 'Reddit', logo: 'https://logo.clearbit.com/reddit.com' },
-        { name: 'Twitch', logo: 'https://logo.clearbit.com/twitch.tv' },
-        { name: 'Spotify', logo: 'https://logo.clearbit.com/spotify.com' },
-        { name: 'Snapchat', logo: 'https://logo.clearbit.com/snapchat.com' },
-        { name: 'Airbnb', logo: 'https://logo.clearbit.com/airbnb.com' },
-        { name: 'Uber', logo: 'https://logo.clearbit.com/uber.com' },
-        { name: 'Lyft', logo: 'https://logo.clearbit.com/lyft.com' },
-        { name: 'PayPal', logo: 'https://logo.clearbit.com/paypal.com' },
-        { name: 'eBay', logo: 'https://logo.clearbit.com/ebay.com' },
-        { name: 'Intel', logo: 'https://logo.clearbit.com/intel.com' },
-        { name: 'AMD', logo: 'https://logo.clearbit.com/amd.com' },
-        { name: 'NVIDIA', logo: 'https://logo.clearbit.com/nvidia.com' },
-        { name: 'Samsung', logo: 'https://logo.clearbit.com/samsung.com' },
-        { name: 'Huawei', logo: 'https://logo.clearbit.com/huawei.com' },
-        { name: 'Xiaomi', logo: 'https://logo.clearbit.com/mi.com' },
-        { name: 'Dell', logo: 'https://logo.clearbit.com/dell.com' },
-        { name: 'HP', logo: 'https://logo.clearbit.com/hp.com' },
-        { name: 'Lenovo', logo: 'https://logo.clearbit.com/lenovo.com' },
-        { name: 'Asus', logo: 'https://logo.clearbit.com/asus.com' },
-        { name: 'Acer', logo: 'https://logo.clearbit.com/acer.com' },
-        { name: 'Razer', logo: 'https://logo.clearbit.com/razer.com' },
-        { name: 'EA', logo: 'https://logo.clearbit.com/ea.com' },
-        { name: 'Ubisoft', logo: 'https://logo.clearbit.com/ubisoft.com' },
-        { name: 'Activision', logo: 'https://logo.clearbit.com/activision.com' },
-        { name: 'Blizzard', logo: 'https://logo.clearbit.com/blizzard.com' },
-        { name: 'Epic Games', logo: 'https://logo.clearbit.com/epicgames.com' },
-        { name: 'Steam', logo: 'https://logo.clearbit.com/steampowered.com' },
-        { name: 'Discord', logo: 'https://logo.clearbit.com/discord.com' },
-        { name: 'Zoom', logo: 'https://logo.clearbit.com/zoom.us' },
-        { name: 'Slack', logo: 'https://logo.clearbit.com/slack.com' },
-        { name: 'GitHub', logo: 'https://logo.clearbit.com/github.com' },
-        { name: 'GitLab', logo: 'https://logo.clearbit.com/gitlab.com' },
-        { name: 'Bitbucket', logo: 'https://logo.clearbit.com/bitbucket.org' },
-        { name: 'Trello', logo: 'https://logo.clearbit.com/trello.com' },
-        { name: 'Notion', logo: 'https://logo.clearbit.com/notion.so' },
-        { name: 'Figma', logo: 'https://logo.clearbit.com/figma.com' },
-        { name: 'Canva', logo: 'https://logo.clearbit.com/canva.com' },
-        { name: 'Dropbox', logo: 'https://logo.clearbit.com/dropbox.com' },
-        { name: 'Box', logo: 'https://logo.clearbit.com/box.com' },
-        { name: 'WordPress', logo: 'https://logo.clearbit.com/wordpress.com' },
-        { name: 'Wix', logo: 'https://logo.clearbit.com/wix.com' },
-        { name: 'Squarespace', logo: 'https://logo.clearbit.com/squarespace.com' },
-        { name: 'Shopify', logo: 'https://logo.clearbit.com/shopify.com' },
-        { name: 'Stripe', logo: 'https://logo.clearbit.com/stripe.com' },
-        { name: 'Coinbase', logo: 'https://logo.clearbit.com/coinbase.com' },
-        { name: 'Binance', logo: 'https://logo.clearbit.com/binance.com' },
-        { name: 'OpenAI', logo: 'https://logo.clearbit.com/openai.com' },
-        { name: 'TikTok', logo: 'https://logo.clearbit.com/tiktok.com' },
-        { name: 'Pinterest', logo: 'https://logo.clearbit.com/pinterest.com' },
-        { name: 'Quora', logo: 'https://logo.clearbit.com/quora.com' },
-        { name: 'Medium', logo: 'https://logo.clearbit.com/medium.com' },
-        { name: 'DeviantArt', logo: 'https://logo.clearbit.com/deviantart.com' },
-        { name: 'Behance', logo: 'https://logo.clearbit.com/behance.net' },
-        { name: 'Dribbble', logo: 'https://logo.clearbit.com/dribbble.com' },
-        { name: 'Vimeo', logo: 'https://logo.clearbit.com/vimeo.com' },
-        { name: 'Dailymotion', logo: 'https://logo.clearbit.com/dailymotion.com' },
-        { name: 'BBC', logo: 'https://logo.clearbit.com/bbc.com' },
-        { name: 'CNN', logo: 'https://logo.clearbit.com/cnn.com' },
-        { name: 'Forbes', logo: 'https://logo.clearbit.com/forbes.com' },
-        { name: 'The Verge', logo: 'https://logo.clearbit.com/theverge.com' },
-        { name: 'TechCrunch', logo: 'https://logo.clearbit.com/techcrunch.com' },
-        { name: 'Wired', logo: 'https://logo.clearbit.com/wired.com' },
-        { name: 'Mashable', logo: 'https://logo.clearbit.com/mashable.com' },
-        { name: 'IGN', logo: 'https://logo.clearbit.com/ign.com' },
-        { name: 'GameSpot', logo: 'https://logo.clearbit.com/gamespot.com' },
-        { name: 'Polygon', logo: 'https://logo.clearbit.com/polygon.com' },
-        { name: 'Kotaku', logo: 'https://logo.clearbit.com/kotaku.com' },
-        { name: 'SteamDB', logo: 'https://logo.clearbit.com/steamdb.info' },
-        { name: 'Roblox', logo: 'https://logo.clearbit.com/roblox.com' },
-        { name: 'Unity', logo: 'https://logo.clearbit.com/unity.com' },
-        { name: 'Unreal Engine', logo: 'https://logo.clearbit.com/unrealengine.com' },
-        { name: 'Fiverr', logo: 'https://logo.clearbit.com/fiverr.com' },
-        { name: 'Upwork', logo: 'https://logo.clearbit.com/upwork.com' },
-        { name: 'Freelancer', logo: 'https://logo.clearbit.com/freelancer.com' },
-        { name: 'Envato', logo: 'https://logo.clearbit.com/envato.com' },
-        { name: 'Alibaba', logo: 'https://logo.clearbit.com/alibaba.com' },
-        { name: 'AliExpress', logo: 'https://logo.clearbit.com/aliexpress.com' },
-        { name: 'Target', logo: 'https://logo.clearbit.com/target.com' },
-        { name: 'Walmart', logo: 'https://logo.clearbit.com/walmart.com' },
-        { name: 'IKEA', logo: 'https://logo.clearbit.com/ikea.com' },
-        { name: 'H&M', logo: 'https://logo.clearbit.com/hm.com' },
-        { name: 'Zara', logo: 'https://logo.clearbit.com/zara.com' },
-        { name: 'Shein', logo: 'https://logo.clearbit.com/shein.com' },
-        { name: 'Booking', logo: 'https://logo.clearbit.com/booking.com' },
-        { name: 'Tripadvisor', logo: 'https://logo.clearbit.com/tripadvisor.com' },
-        { name: 'Expedia', logo: 'https://logo.clearbit.com/expedia.com' },
-        { name: 'KFC', logo: 'https://logo.clearbit.com/kfc.com' },
-        { name: 'McDonald’s', logo: 'https://logo.clearbit.com/mcdonalds.com' },
-        { name: 'Burger King', logo: 'https://logo.clearbit.com/bk.com' },
-        { name: 'Starbucks', logo: 'https://logo.clearbit.com/starbucks.com' },
-        { name: 'Subway', logo: 'https://logo.clearbit.com/subway.com' },
-        { name: 'Dominos', logo: 'https://logo.clearbit.com/dominos.com' },
-        { name: 'Pizza Hut', logo: 'https://logo.clearbit.com/pizzahut.com' },
-        { name: 'Pepsi', logo: 'https://logo.clearbit.com/pepsi.com' },
-        { name: 'Coca‑Cola', logo: 'https://logo.clearbit.com/coca-cola.com' },
-        { name: 'Red Bull', logo: 'https://logo.clearbit.com/redbull.com' },
-        { name: 'Sprite', logo: 'https://logo.clearbit.com/sprite.com' },
-        { name: '7‑Eleven', logo: 'https://logo.clearbit.com/7-eleven.com' },
-        { name: 'Shell', logo: 'https://logo.clearbit.com/shell.com' },
-        { name: 'BP', logo: 'https://logo.clearbit.com/bp.com' },
-        { name: 'ExxonMobil', logo: 'https://logo.clearbit.com/exxonmobil.com' },
-        { name: 'Nike Jordan', logo: 'https://logo.clearbit.com/jordan.com' },
-        { name: 'Converse', logo: 'https://logo.clearbit.com/converse.com' },
-        { name: 'Vans', logo: 'https://logo.clearbit.com/vans.com' },
-        { name: 'New Balance', logo: 'https://logo.clearbit.com/newbalance.com' },
-        { name: 'Puma', logo: 'https://logo.clearbit.com/puma.com' },
-        { name: 'Reebok', logo: 'https://logo.clearbit.com/reebok.com' },
-        { name: 'Asics', logo: 'https://logo.clearbit.com/asics.com' },
-        { name: 'Under Armour', logo: 'https://logo.clearbit.com/underarmour.com' },
-        { name: 'The North Face', logo: 'https://logo.clearbit.com/thenorthface.com' },
-        { name: 'Patagonia', logo: 'https://logo.clearbit.com/patagonia.com' },
-        { name: 'Columbia', logo: 'https://logo.clearbit.com/columbia.com' },
-        { name: 'Canon', logo: 'https://logo.clearbit.com/canon.com' },
-        { name: 'Nikon', logo: 'https://logo.clearbit.com/nikon.com' },
-        { name: 'Sony', logo: 'https://logo.clearbit.com/sony.com' },
-        { name: 'Panasonic', logo: 'https://logo.clearbit.com/panasonic.com' },
-        { name: 'GoPro', logo: 'https://logo.clearbit.com/gopro.com' },
-        { name: 'DJI', logo: 'https://logo.clearbit.com/dji.com' },
-        { name: 'Garmin', logo: 'https://logo.clearbit.com/garmin.com' },
-        { name: 'Fitbit', logo: 'https://logo.clearbit.com/fitbit.com' },
-        { name: 'Casio', logo: 'https://logo.clearbit.com/casio.com' },
-        { name: 'Rolex', logo: 'https://logo.clearbit.com/rolex.com' },
-        { name: 'Omega', logo: 'https://logo.clearbit.com/omegawatches.com' },
-        { name: 'Swatch', logo: 'https://logo.clearbit.com/swatch.com' },
-        { name: 'Tissot', logo: 'https://logo.clearbit.com/tissot.com' },
-        { name: 'Seiko', logo: 'https://logo.clearbit.com/seiko.com' },
-        { name: 'Citizen', logo: 'https://logo.clearbit.com/citizenwatch.com' },
-        { name: 'Toyota', logo: 'https://logo.clearbit.com/toyota.com' },
-        { name: 'Honda', logo: 'https://logo.clearbit.com/honda.com' },
-        { name: 'BMW', logo: 'https://logo.clearbit.com/bmw.com' },
-        { name: 'Mercedes', logo: 'https://logo.clearbit.com/mercedes-benz.com' },
-        { name: 'Audi', logo: 'https://logo.clearbit.com/audi.com' },
-        { name: 'Volkswagen', logo: 'https://logo.clearbit.com/vw.com' },
-        { name: 'Ford', logo: 'https://logo.clearbit.com/ford.com' },
-        { name: 'Chevrolet', logo: 'https://logo.clearbit.com/chevrolet.com' },
-        { name: 'Tesla Motors', logo: 'https://logo.clearbit.com/tesla.com' },
-        { name: 'Lamborghini', logo: 'https://logo.clearbit.com/lamborghini.com' },
-        { name: 'Ferrari', logo: 'https://logo.clearbit.com/ferrari.com' },
-        { name: 'Porsche', logo: 'https://logo.clearbit.com/porsche.com' },
-        { name: 'Rolls‑Royce', logo: 'https://logo.clearbit.com/rolls-roycemotorcars.com' },
-        { name: 'Bentley', logo: 'https://logo.clearbit.com/bentley.com' },
-        { name: 'Maserati', logo: 'https://logo.clearbit.com/maserati.com' }
-        ];
         // Load tickets from file
 async function loadTickets() {
     try {
@@ -329,7 +150,7 @@ async function saveTickets() {
 async function loadTicketClaims() {
     try {
         const data = await fs.readFile(TICKET_CLAIMS_FILE, 'utf8');
-        if (!data.trim()) {
+        if (!data.trim()) { 
             console.log('Ticket claims file is empty, starting with empty ticket claims');
             ticketClaims = new Map();
             return;
@@ -354,12 +175,56 @@ async function ensureTicketCategory(guild) {
             name: 'Tickets',
             type: ChannelType.GuildCategory,
             permissionOverwrites: [
-                { id: guild.id, deny: [PermissionsBitField.Flags.ViewChannel] },
-                { id: TICKET_ADMIN_ROLE_ID, allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.ManageChannels] },
-            ],
+    { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] },
+    { id: TICKET_ADMIN_ROLE_ID, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ManageChannels] },
+],
         });
     }
     return category.id;
+}
+
+const ORDER_TICKET_PREFIX = 'ticket-order-';
+
+function isOrderTicketChannel(channel) {
+    return Boolean(channel?.name && channel.name.startsWith(ORDER_TICKET_PREFIX));
+}
+
+function getOrderTicketOwnerId(channel) {
+    if (!channel?.permissionOverwrites?.cache) {
+        return null;
+    }
+
+    const overwrites = channel.permissionOverwrites.cache;
+    const ownerOverwrite = overwrites.find((overwrite) => {
+        if (overwrite.id === channel.guild.id || overwrite.id === channel.client.user?.id) {
+            return false;
+        }
+        return !channel.guild.roles.cache.has(overwrite.id);
+    });
+
+    return ownerOverwrite?.id || null;
+}
+
+function getOrCreateTicketData(channel) {
+    if (tickets.has(channel.id)) {
+        return { data: tickets.get(channel.id), isOrderTicket: false };
+    }
+
+    if (!isOrderTicketChannel(channel)) {
+        return null;
+    }
+
+    const ownerId = getOrderTicketOwnerId(channel);
+    const ticketData = {
+        ownerId,
+        reason: 'Order ticket',
+        createdAt: Date.now(),
+        claimedBy: null,
+        isOrderTicket: true,
+    };
+
+    tickets.set(channel.id, ticketData);
+    return { data: ticketData, isOrderTicket: true };
 }
 
 
@@ -560,109 +425,7 @@ async function saveMutedChannels() {
                     console.error('Error saving jail logs:', error);
                 }
             }
-            const embedConfig = {
-                color: '#00b4d8',
-                footer: { text: 'Sa7bk', iconURL: 'https://images-ext-1.discordapp.net/external/6OnlQDCErvTtk_a_NRMK9JnbUcwZ5TmNComK4Y-PrsI/https/cdn.discordapp.com/avatars/1455584520169328690/f885c5ba41113bef516195c2fbb60cbb.webp?format=webp' },
-            };
 
-            const commandCategories = {
-                moderation: {
-        name: 'Moderation',
-        emoji: '<:ag_mod_black_shield:1405897818908000397>', 
-        description: 'Commands for moderating the server',
-        commands: [                    
-                    { name: '<a:arow1:1455595655929139465> ``$ban`` <user_id/user> [reason]', description: '***Ban a member from the server***' },
-                    { name: '<a:arow1:1455595655929139465> ``$kick`` <user_id/user> [reason]', description: '***Kick a member from the server***' },
-                    { name: '<a:arow1:1455595655929139465> ``$mute`` <user_id/user> [duration] [reason]', description: '***Mute a member (server mute) for specified duration***' },
-                    { name: '<a:arow1:1455595655929139465> ``$unmute`` <user_id/user>', description: '***Unmute a member (server mute)***' },
-                    { name: '<a:arow1:1455595655929139465> ``$unmutevoice`` <user_id/user>', description: '***Unmute a member in voice channels***' },
-                    { name: '<a:arow1:1455595655929139465> ``$unban`` <user_id/user>', description: '***Unban a member from the server***' },
-                    { name: '<a:arow1:1455595655929139465> ``$warn`` <user_id/user> [reason]', description: '***Give a warning to a member***' },
-                    { name: '<a:arow1:1455595655929139465> ``$unwarn`` <user_id/user> <warnid>', description: '***Remove a warning from a member***' },
-                    { name: '<a:arow1:1455595655929139465> ``$warns`` [user_id/user]', description: '***Show warnings for a member***' },
-                    { name: '<a:arow1:1455595655929139465> ``$jaillogs`` <user_id/user>', description: '***Show jail logs for a member***' },
-                    { name: '<a:arow1:1455595655929139465> ``$clear`` <amount>', description: '***Delete messages in current channel***' },
-                    { name: '<a:arow1:1455595655929139465> ``$lock``', description: '***Lock the current channel***' },
-                    { name: '<a:arow1:1455595655929139465> ``$unlock``', description: '***Unlock the current channel***' },
-                    { name: '<a:arow1:1455595655929139465> ``$giverole`` <user_id/user> <role>', description: '***Give a role to a member***' },
-                    { name: '<a:arow1:1455595655929139465> ``$jail`` <user_id/user>', description: '***Jail a member (remove all roles)***' },
-                    { name: '<a:arow1:1455595655929139465> ``$unjail`` <user_id/user>', description: '***Unjail a member (restore roles)***' },
-                    { name: '<a:arow1:1455595655929139465> ``$nick`` <user_id/user> <nickname>', description: '***Change a member\'s nickname***' },
-                    { name: '<a:arow1:1455595655929139465> ``$timeout`` <user_id/user> [duration] [reason]', description: '***Timeout a member (max 1440 minutes)***' },
-                    { name: '<a:arow1:1455595655929139465> ``$untimeout`` <user_id/user>', description: '***Remove timeout from a member***' },                    { name: '<a:arow1:1455595655929139465> ``$hnina`` <user_id/user> [duration]', description: '***Mute a member from sending messages in all text channels for a specified duration***' },
-                    { name: '<a:arow1:1455595655929139465> ``$hdr`` <user_id/user>', description: '***Unmute a member, restoring their ability to send messages in text channels***' },]
-    },
-             voice: {
-    name: 'Voice',
-    emoji: '<:voice:1405898576437182566>',
-    description: 'voice channel management',
-    commands: [
-        { name: '<a:arow1:1455595655929139465> ``$move``', description: 'Move a user to your voice channel' },
-        { name: '<a:arow1:1455595655929139465> ``$mperm``', description: 'Grant voice permissions to a user' },
-        { name: '<a:arow1:1455595655929139465> ``$moveall``', description: 'Move all members from source to target voice channel' },
-        { name: '<a:arow1:1455595655929139465> ``$locate`` <user_id/user>', description: 'Find which voice channel a user is in' }
-    ]
-},
-   information: {
-        name: 'Information',
-        emoji: '<:info_icon:1393519748750512169>',
-        description: 'Commands to get information about users and server',
-        commands: [
-                        { name: '<a:arow1:1455595655929139465>  ``$server``', description: 'Display server information' },
-                        { name: '<a:arow1:1455595655929139465>  ``$user``', description: 'Show user information' },
-                        { name: '<a:arow1:1455595655929139465> ``$avatar``', description: 'Display user\'s avatar' }
-        ]
-    },
-               utility: {
-        name: 'Utility',
-        emoji: '<:utility:1405898239718199367>',
-        description: 'Utility commands ',
-        commands: [
-             { name: '<a:arow1:1455595655929139465> ``$help``', description: 'Show this help menu' }
-        ]
-    },
-               social: {
-        name: 'Social',
-        emoji: '<:black_rose:1405898010319388813>',
-        description: 'Commands for social interactions and fun',
-        commands: [
-                        { name: '<a:arow1:1455595655929139465> ``$marry`` **User**', description: 'Propose marriage to a user' },
-                        { name: '<a:arow1:1455595655929139465> ``$divorce``', description: 'Request a divorce from your spouse' },
-                        { name: '<a:arow1:1455595655929139465> ``$love`` **User**', description: 'Check love percentage with a user' },
-                        { name: '<a:arow1:1455595655929139465> ``$pp`` **User**', description: 'Get a random "size" for a user (fun command)' },
-                        { name: '<a:arow1:1455595655929139465> ``$child`` **User**', description: 'Invite a user to join your family as a child (requires marriage role)' },
-                        { name: '<a:arow1:1455595655929139465> ``$betray``', description: 'Leave your family (requires being in a family)' },
-                        { name: '<a:arow1:1455595655929139465> ``$howgay`` **User**', description: 'Get a random "gay percentage" for a user (fun command)' },
-                        { name: '<a:arow1:1455595655929139465> ``$family`` **User**', description: 'View your family or another user\'s family' }
-        ]
-    },
-    ticket: {
-    name: 'Tickets',
-    emoji: '🎫',
-    description: 'Commands for managing tickets',
-    commands: [
-        { name: '<a:arow1:1455595655929139465> `$ticket`', description: '***Create a ticket panel***' },
-        { name: '<a:arow1:1455595655929139465> `$close`', description: '***Close an open ticket***' },
-        { name: '<a:arow1:1455595655929139465> `$claim`', description: '***Claim a ticket ***' },
-        { name: '<a:arow1:1455595655929139465> `$unclaim`', description: '***Unclaim a ticket***' },
-        { name: '<a:arow1:1455595655929139465> `$topticket`', description: '***Show top 10 ticket claimers***' },
-        { name: '<a:arow1:1455595655929139465> `$addtk`', description: '***add user to ur ticket***' },
-        { name: '<a:arow1:1455595655929139465> `$removetk`', description: '***remove user from ur ticket***' }
-
-    ]
-},
-            games: {
-        name: 'Games',
-        emoji: '🎮',
-        description: 'Commands for fun and games',
-        commands: [
-                    { name: '<a:arow1:1455595655929139465> `$flags`', description: 'Guess the country from its flag!' },
-                    { name: '<a:arow1:1455595655929139465> `$brands`', description: 'Guess the brand from its logo!' },
-                    { name: '<a:arow1:1455595655929139465> `$xo <user or id>`', description: 'Challenge a user to play Tic-Tac-Toe!' }
-        ]
-    }
-                
-};
               
 
 
@@ -927,7 +690,7 @@ async function saveMutedChannels() {
             // Create help embed with category selection
             function createHelpEmbed(user) {
                 const embed = new EmbedBuilder()
-                    .setColor('#120D0D')
+                    .setColor('#030303')
                     .setTitle('Helper Command Center <:8121moderatorcerified:1455947857700851907>')
                     .setDescription(`**Hello there! I'm Sa7bK, your fun and friendly Discord bot. <:bots1:1455942769414639763> \n I'm here to bring joy, games, and great vibes to your community. <:support:1455952918162178231>\n \n \`Type $help\` to see all my commands. Enjoy! <:cmd1:1455953038585102437>**`)
                     .setThumbnail("https://media.discordapp.net/attachments/1070521912981205023/1407810083936796742/d7d5649719cd3ba361b14f8a16eeb609.webp?ex=68a774cf&is=68a6234f&hm=e330b53a014bb3e4188a9d251942e7127c9868c21a2200d8b1a12c801bff5aa5&=&format=webp")
@@ -1002,7 +765,7 @@ function createCategoryEmbed(categoryKey, user, page = 1, commandsPerPage = 4) {
     return { embed, totalPages, currentPage: page };
 }
 
-client.on('ready', async () => {
+client.on('clientReady', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     // Cache invites for all guilds
     for (const guild of client.guilds.cache.values()) {
@@ -1140,7 +903,7 @@ client.on('guildMemberAdd', async member => {
                             },
                             {
                                 id: member.guild.roles.everyone.id,
-                                deny: [PermissionsBitField.Flags.ViewChannel],
+                                deny:  [PermissionFlagsBits.ViewChannel],
                             },
                         ],
                     });
@@ -1583,11 +1346,11 @@ if (omUsers.has(omKey) && oldState.serverMute && !newState.serverMute) {
                                                         },
                                                         {
                                                                 id: helpRole.id,
-                                                                allow: [PermissionsBitField.Flags.ViewChannel],
+                                                                allow:  [PermissionFlagsBits.ViewChannel],
                                                         },
                                                         {
                                                                 id: newState.guild.id,
-                                                                deny: [PermissionsBitField.Flags.ViewChannel],
+                                                                deny:  [PermissionFlagsBits.ViewChannel],
                                                         },
                                                 ],
                                         });
@@ -1648,11 +1411,11 @@ if (omUsers.has(omKey) && oldState.serverMute && !newState.serverMute) {
                                 },
                                 {
                                     id: helpRole.id,
-                                    allow: [PermissionsBitField.Flags.ViewChannel],
+                                    allow:  [PermissionFlagsBits.ViewChannel],
                                 },
                                 {
                                     id: newState.guild.id,
-                                    deny: [PermissionsBitField.Flags.ViewChannel],
+                                    deny:  [PermissionFlagsBits.ViewChannel],
                                 },
                             ],
                         });
@@ -1757,7 +1520,7 @@ client.on('interactionCreate', async (interaction) => {
                     name: 'live-streams',
                     type: ChannelType.GuildText,
                     permissionOverwrites: [
-                        { id: guild.id, allow: [PermissionsBitField.Flags.ViewChannel] },
+                        { id: guild.id, allow:  [PermissionFlagsBits.ViewChannel] },
                         { id: client.user.id, allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages] },
                     ],
                 });
@@ -1843,7 +1606,7 @@ client.on('interactionCreate', async (interaction) => {
                         },
                         {
                             id: interaction.guild.roles.everyone.id,
-                            deny: [PermissionsBitField.Flags.ViewChannel],
+                            deny:  [PermissionFlagsBits.ViewChannel],
                         },
                     ],
                 });
@@ -1878,16 +1641,17 @@ client.on('interactionCreate', async (interaction) => {
             else if (interaction.customId.startsWith('close_ticket_')) {
                 await interaction.deferReply({ ephemeral: true }); // Defer reply to avoid interaction timeout
                 const channelId = interaction.customId.split('_')[2];
-                const ticketData = tickets.get(channelId);
+                const ticketChannel = interaction.guild.channels.cache.get(channelId);
+                const ticketContext = ticketChannel ? getOrCreateTicketData(ticketChannel) : null;
+                const ticketData = ticketContext?.data;
                 if (!ticketData) {
                     return interaction.editReply({ content: 'This ticket no longer exists!', flags: 64 });
                 }
 
-                if (interaction.user.id !== ticketData.ownerId && !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator) && !interaction.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
+                if (interaction.user.id !== ticketData.ownerId && !interaction.member.permissions.has(PermissionFlagsBits.Administrator) && !interaction.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
                     return interaction.editReply({ content: 'You can only close your own ticket or need Administrator/Ticket Admin permissions!', flags: 64 });
                 }
 
-                const ticketChannel = interaction.guild.channels.cache.get(channelId);
                 if (ticketChannel) {
                     await ticketChannel.delete();
                     tickets.delete(channelId);
@@ -2338,7 +2102,7 @@ client.on('interactionCreate', async (interaction) => {
                         },
                         {
                             id: interaction.guild.id,
-                            deny: [PermissionsBitField.Flags.ViewChannel],
+                            deny:  [PermissionFlagsBits.ViewChannel],
                         },
                     ],
                 });
@@ -2615,11 +2379,12 @@ async valoclaim() {
         .then(msg => setTimeout(() => msg.delete().catch(() => {}), 5000));
 },
     async close() {
-        if (!tickets.has(message.channel.id)) {
+        const ticketContext = getOrCreateTicketData(message.channel);
+        if (!ticketContext) {
             return message.reply({ embeds: [errorEmbed('Invalid Channel', 'This channel is not a ticket!')] });
         }
 
-        const ticketData = tickets.get(message.channel.id);
+        const { data: ticketData } = ticketContext;
         if (message.author.id !== ticketData.ownerId && !message.member.permissions.has(PermissionFlagsBits.Administrator) && !message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
             return message.reply({ embeds: [errorEmbed('Permission Denied', 'You can only close your own ticket or need Administrator/Ticket Admin permissions!')] });
         }
@@ -2648,15 +2413,25 @@ async valoclaim() {
     },
 
     async claim() {
-        if (!message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID) && !message.member.permissions.has(PermissionFlagsBits.Administrator)) {
-            return message.reply({ embeds: [errorEmbed('Permission Denied', 'You need  permission to claim a ticket!')] });
-        }
+        if (!message.guild || !message.member) {
+  return message.reply('this is work just in the server');
+}
 
-        if (!tickets.has(message.channel.id)) {
+        const isAdmin =
+  message.member.roles?.cache?.has(TICKET_ADMIN_ROLE_ID) ||
+  message.member.permissions?.has(PermissionFlagsBits.Administrator);
+
+if (!isAdmin) {
+  return message.reply('u dont have permission to use this command');
+}
+
+
+        const ticketContext = getOrCreateTicketData(message.channel);
+        if (!ticketContext) {
             return message.reply({ embeds: [errorEmbed('Invalid Channel', 'This channel is not a ticket!')] });
         }
 
-        const ticketData = tickets.get(message.channel.id);
+        const { data: ticketData } = ticketContext;
         if (ticketData.claimedBy) {
             return message.reply({ embeds: [errorEmbed('Ticket Already Claimed', `This ticket is already claimed by <@${ticketData.claimedBy}>!`)] });
         }
@@ -2702,7 +2477,8 @@ async valoclaim() {
     },
     async unclaim() {
     // Check if the channel is a valid ticket
-    if (!tickets.has(message.channel.id)) {
+    const ticketContext = getOrCreateTicketData(message.channel);
+    if (!ticketContext) {
         return message.reply({
             embeds: [
                 errorEmbed('Invalid Channel', 'This channel is not a ticket!')
@@ -2710,10 +2486,10 @@ async valoclaim() {
         });
     }
 
-    const ticketData = tickets.get(message.channel.id);
+    const { data: ticketData } = ticketContext;
 
     // Check if the command executor has admin or ticket admin role
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator) && !message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
+    if (!message.member.permissions.has(PermissionFlagsBits.Administrator) && !message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
         return message.reply({
             embeds: [
                 errorEmbed('Permission Denied', 'You need Permision to unclaim a ticket!')
@@ -2731,7 +2507,7 @@ async valoclaim() {
     }
 
     // Check if the command executor is the claimer or has Administrator permissions
-    if (ticketData.claimedBy !== message.author.id && !message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    if (ticketData.claimedBy !== message.author.id && !message.member.permissions.has(PermissionFlagsBits.Administrator)) {
         return message.reply({
             embeds: [
                 errorEmbed('Permission Denied', `You can only unclaim your own ticket `)
@@ -2856,7 +2632,7 @@ async valoclaim() {
     }
 
     // Check if the command executor has admin or ticket admin role
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator) && !message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
+    if (!message.member.permissions.has(PermissionFlagsBits.Administrator) && !message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
         return message.reply({
             embeds: [
                 errorEmbed('Permission Denied', 'You need <@&1397727664894382231> to add users!')
@@ -2934,7 +2710,7 @@ async removetk() {
     const ticketData = tickets.get(message.channel.id);
 
     // Check if the command executor has admin or ticket admin role
-    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator) && !message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
+    if (!message.member.permissions.has(PermissionFlagsBits.Administrator) && !message.member.roles.cache.has(TICKET_ADMIN_ROLE_ID)) {
         return message.reply({
             embeds: [
                 errorEmbed('Permission Denied', 'You need Administrator permissions or the Ticket Admin role to remove users!')
@@ -4063,7 +3839,7 @@ async roletp(args) {
                             try {
                                 await channel.permissionOverwrites.edit(userToPermit.id, {
                                     [PermissionsBitField.Flags.Connect]: true,
-                                    [PermissionsBitField.Flags.ViewChannel]: true,
+                                     [PermissionFlagsBits.ViewChannel]: true,
                                     [PermissionsBitField.Flags.Speak]: true,
                                     [PermissionsBitField.Flags.ManageChannels]: false
                                 });

@@ -5,7 +5,29 @@
 {% block content %}
 <style>
   .gradient-text { background: linear-gradient(135deg, #ef4444 0%, #fca5a5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .product-image-container { background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.8)); }
+  .product-image-container {
+    background: linear-gradient(160deg, rgba(11, 15, 20, 0.98), rgba(18, 23, 30, 0.95));
+    border: 1px solid rgba(239, 68, 68, 0.22);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-image-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px 220px at 10% -20%, rgba(239, 68, 68, 0.25), transparent 60%);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  .product-main-frame {
+    background: radial-gradient(120% 120% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 55%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  }
+  .thumb-btn { transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; background: rgba(13, 17, 23, 0.8); }
+  .thumb-btn:hover { transform: translateY(-2px) scale(1.02); border-color: rgba(239, 68, 68, 0.4); }
+  .thumb-btn.is-active { border-color: rgba(239, 68, 68, 0.85); box-shadow: 0 10px 26px rgba(239, 68, 68, 0.22); }
   .spec-item { transition: all 0.3s ease; }
   .spec-item:hover { transform: translateX(4px); }
   .review-card { transition: all 0.3s ease; }
@@ -33,17 +55,34 @@
     <!-- Left Column: Product Image & Details -->
     <div class="lg:col-span-2 space-y-8">
       <!-- Product Image -->
-      <div class="product-image-container rounded-2xl p-8 border border-slate-700/50 backdrop-blur-sm shadow-2xl shadow-black/20">
-        <div class="w-full aspect-square overflow-hidden rounded-xl">
+      <div class="product-image-container rounded-2xl p-8 backdrop-blur-sm">
           {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105">
+            <img id="main-product-image" src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105 rounded-xl">
+          {% elif product.images.first %}
+            <img id="main-product-image" src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105 rounded-xl">
           {% else %}
-            <div class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-slate-500">
+            <div class="w-full h-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-slate-500">
               <svg class="w-24 h-24 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
           {% endif %}
-        </div>
+          {% if product.images.exists or product.image %}
+          <div class="mt-3 max-w-xl py-5">
+            <div class="grid grid-cols-4 sm:grid-cols-6 gap-20 justify-items-start" id="product-thumbnails">
+              {% if product.image %}
+              <button type="button" class="thumb-btn is-active border border-slate-700/50 rounded-xl overflow-hidden w-20 sm:w-24 aspect-[16/9]" data-full="{{ product.image.url }}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+              </button>
+              {% endif %}
+              {% for image in product.images.all %}
+              <button type="button" class="thumb-btn border border-slate-700/50 rounded-xl overflow-hidden w-20 sm:w-24 aspect-[16/9]" data-full="{{ image.image.url }}">
+                <img src="{{ image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
       </div>
+
 
       <!-- Product Description & Details -->
       <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-sm shadow-2xl shadow-black/20">
@@ -57,7 +96,8 @@
         {% if product.description %}
         <div class="mt-8 pt-8 border-t border-slate-700/50">
           <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
-            <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM438 209.7C427.3 201.9 412.3 204.3 404.5 215L285.1 379.2L233 327.1C223.6 317.7 208.4 317.7 199.1 327.1C189.8 336.5 189.7 351.7 199.1 361L271.1 433C276.1 438 282.9 440.5 289.9 440C296.9 439.5 303.3 435.9 307.4 430.2L443.3 243.2C451.1 232.5 448.7 217.5 438 209.7z"/></svg>
+
             Key Features
           </h3>
           <div class="grid md:grid-cols-2 gap-4">
@@ -69,21 +109,21 @@
               </div>
             </div>
             <div class="spec-item flex items-start gap-3 p-4 bg-slate-800/60 rounded-lg border border-slate-700/30 hover:border-red-500/30">
-              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 64C324.6 64 329.2 65 333.4 66.9L521.8 146.8C543.8 156.1 560.2 177.8 560.1 204C559.6 303.2 518.8 484.7 346.5 567.2C329.8 575.2 310.4 575.2 293.7 567.2C121.3 484.7 80.6 303.2 80.1 204C80 177.8 96.4 156.1 118.4 146.8L306.7 66.9C310.9 65 315.4 64 320 64z"/></svg>
               <div>
-                <p class="text-sm font-semibold text-white">Verified Experts</p>
-                <p class="text-xs text-slate-400 mt-1">Trained pro players</p>
+                <p class="text-sm font-semibold text-white">Completely Safe</p>
+                <p class="text-xs text-slate-400 mt-1">100% safe to run & use</p>
               </div>
             </div>
             <div class="spec-item flex items-start gap-3 p-4 bg-slate-800/60 rounded-lg border border-slate-700/30 hover:border-red-500/30">
-              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m9.172-9.172a9 9 0 11-12.728 12.728 9 9 0 0112.728-12.728z"/></svg>
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 128C241 128 175.3 185.3 162.3 260.7C171.6 257.7 181.6 256 192 256L208 256C234.5 256 256 277.5 256 304L256 400C256 426.5 234.5 448 208 448L192 448C139 448 96 405 96 352L96 288C96 164.3 196.3 64 320 64C443.7 64 544 164.3 544 288L544 456.1C544 522.4 490.2 576.1 423.9 576.1L336 576L304 576C277.5 576 256 554.5 256 528C256 501.5 277.5 480 304 480L336 480C362.5 480 384 501.5 384 528L384 528L424 528C463.8 528 496 495.8 496 456L496 435.1C481.9 443.3 465.5 447.9 448 447.9L432 447.9C405.5 447.9 384 426.4 384 399.9L384 303.9C384 277.4 405.5 255.9 432 255.9L448 255.9C458.4 255.9 468.3 257.5 477.7 260.6C464.7 185.3 399.1 127.9 320 127.9z"/></svg>
               <div>
                 <p class="text-sm font-semibold text-white">24/7 Support</p>
                 <p class="text-xs text-slate-400 mt-1">Always available to help</p>
               </div>
             </div>
             <div class="spec-item flex items-start gap-3 p-4 bg-slate-800/60 rounded-lg border border-slate-700/30 hover:border-red-500/30">
-              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM438 209.7C427.3 201.9 412.3 204.3 404.5 215L285.1 379.2L233 327.1C223.6 317.7 208.4 317.7 199.1 327.1C189.8 336.5 189.7 351.7 199.1 361L271.1 433C276.1 438 282.9 440.5 289.9 440C296.9 439.5 303.3 435.9 307.4 430.2L443.3 243.2C451.1 232.5 448.7 217.5 438 209.7z"/></svg>
               <div>
                 <p class="text-sm font-semibold text-white">Satisfaction Guaranteed</p>
                 <p class="text-xs text-slate-400 mt-1">100% quality assured</p>
@@ -241,7 +281,7 @@
         <!-- Product Name & Price -->
         <div class="mb-8">
           <h1 class="text-3xl font-black gradient-text mb-3">{{ product.name }}</h1>
-          <div class="text-4xl font-black text-white">${{ product.price }}</div>
+          <div class="text-4xl font-black text-white">€{{ product.price }}</div>
           <div class="mt-3 flex items-center gap-2">
             {% if avg_rating > 0 %}
               <div class="flex gap-1">
@@ -373,6 +413,29 @@ document.addEventListener('DOMContentLoaded', function(){
   })
 })
 </script>
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const mainImage = document.getElementById('main-product-image');
+    const thumbnails = document.querySelectorAll('#product-thumbnails .thumb-btn');
+    if (!mainImage || !thumbnails.length) {
+      return;
+    }
+
+    thumbnails.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const full = thumb.getAttribute('data-full');
+        if (!full) {
+          return;
+        }
+        mainImage.src = full;
+        thumbnails.forEach((btn) => btn.classList.remove('is-active'));
+        thumb.classList.add('is-active');
+      });
+    });
+  });
+</script>
+
 
 <script>
 // Enhanced star rating widget

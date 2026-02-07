@@ -23,6 +23,9 @@ from shop import views as shop_views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('about', views.about, name='about'),
+    path('privacy', views.privacy, name='privacy'),
+    path('terms', views.terms, name='terms'),
     path('contact', views.contact, name='contact'),
     path('contact_us.html', views.contact_us, name='contact_us'),
     path('api/contact/submit', views.submit_contact, name='submit_contact'),
@@ -31,6 +34,7 @@ urlpatterns = [
     path('api/messages/<int:message_id>/read', views.mark_message_read, name='mark_message_read'),
     path('api/discord/order/create/', shop_views.discord_order_create, name='discord_order_create'),
     path('api/discord/order/paid/', shop_views.discord_order_paid, name='discord_order_paid'),
+    path('api/discord/activation/create/', shop_views.discord_activation_create, name='discord_activation_create'),
     path('admin/', admin.site.urls),
     path('download/', include('downloads.urls')),
     path('shop/', include('shop.urls')),

@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.text import slugify
 import uuid
+import secrets
+import string
 from django.conf import settings
 from decimal import Decimal
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -15,6 +17,8 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='products/')
     is_active = models.BooleanField(default=True)
+    sellauth_product_id = models.PositiveBigIntegerField(blank=True, null=True)
+    sellauth_variant_id = models.PositiveBigIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -33,6 +37,28 @@ class Product(models.Model):
                 slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
             self.slug = slug
         super().save(*args, **kwargs)
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='products/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"{self.product.name} image"
+
+
+def generate_order_id():
+    alphabet = string.ascii_uppercase + string.digits
+    parts = [''.join(secrets.choice(alphabet) for _ in range(5)) for _ in range(3)]
+    candidate = f"SA7BI-ORDER-{parts[0]}-{parts[1]}-{parts[2]}"
+    while Order.objects.filter(order_id=candidate).exists():
+        parts = [''.join(secrets.choice(alphabet) for _ in range(5)) for _ in range(3)]
+        candidate = f"SA7BI-{parts[0]}-{parts[1]}-{parts[2]}"
+    return candidate
 
 
 class Order(models.Model):
@@ -60,7 +86,7 @@ class Order(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    order_id = models.CharField(max_length=50, unique=True, default=uuid.uuid4)
+    order_id = models.CharField(max_length=50, unique=True, default=generate_order_id)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     payment_method = models.CharField(
         max_length=20,

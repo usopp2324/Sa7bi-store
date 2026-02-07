@@ -1,16 +1,31 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Product, Order, OrderItem
+from .models import Product, ProductImage, Order, OrderItem
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+    fields = ('image',)
+
 from .models import Wishlist, Review, ContactMessage, UserProfile
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('image_tag', 'name', 'price', 'is_active', 'created_at')
+    list_display = ('image_tag', 'name', 'price',  'is_active', 'created_at')
     list_filter = ('is_active',)
     search_fields = ('name', 'description')
     readonly_fields = ('image_preview',)
-    fields = ('name', 'description', 'price', 'image', 'image_preview', 'is_active')
+    fields = (
+        'name',
+        'description',
+        'price',
+        'image',
+        'image_preview',
+        'is_active',
+        'sellauth_product_id',
+        'sellauth_variant_id',
+    )
+    inlines = [ProductImageInline]
 
     def image_preview(self, obj):
         if not obj.image:
@@ -36,7 +51,7 @@ class OrderItemInline(admin.TabularInline):
     can_delete = False
 
     def subtotal(self, obj):
-        return f"${obj.subtotal}"
+        return f"€{obj.subtotal}"
     subtotal.short_description = 'Subtotal'
 
 
@@ -80,7 +95,7 @@ class OrderItemAdmin(admin.ModelAdmin):
     readonly_fields = ('order', 'product', 'quantity', 'price')
 
     def subtotal(self, obj):
-        return f"${obj.subtotal}"
+        return f"€{obj.subtotal}"
     subtotal.short_description = 'Subtotal'
 
 

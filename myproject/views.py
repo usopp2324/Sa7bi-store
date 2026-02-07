@@ -26,6 +26,21 @@ def contact(request):
     return render(request, 'contact.html')
 
 
+def about(request):
+    """Render the About Us page."""
+    return render(request, 'about.html')
+
+
+def privacy(request):
+    """Render the Privacy Policy page."""
+    return render(request, 'privacy.html')
+
+
+def terms(request):
+    """Render the Terms of Service page."""
+    return render(request, 'terms.html')
+
+
 @require_http_methods(["POST"])
 def submit_contact(request):
     """Handle contact form submission via AJAX."""

@@ -1,7 +1,11 @@
 module.exports = {
-  name: 'ready',
+  name: 'clientReady',
   once: true,
-  execute(client) {
+  execute(client, context) {
     console.log(`Bot logged in as ${client.user.tag}`);
+    if (context?.config) {
+      const { startPendingMonitor } = require('../utils/pending');
+      startPendingMonitor(client, context.config);
+    }
   },
 };

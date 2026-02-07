@@ -15,14 +15,6 @@
     <p class="text-gray-400 text-lg">Welcome back, <span class="text-primary font-semibold">{{ user.username }}</span>!</p>
   </header>
 
-  {% if messages %}
-    {% for message in messages %}
-      <div class="mb-6 p-4 rounded-xl bg-green-500/10 text-green-400 border border-green-500/30">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-
   <!-- Stats Cards -->
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
     <!-- Total Orders -->
@@ -45,7 +37,7 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-gray-400 text-sm uppercase tracking-wide">Total Spent</p>
-          <p class="text-4xl font-black mt-2">${{ total_spent }}</p>
+          <p class="text-4xl font-black mt-2">€{{ total_spent }}</p>
         </div>
         <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center">
           <svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +95,7 @@
             {% for item in order.items.all %}
             <div class="flex justify-between text-sm">
               <span class="text-gray-300">{{ item.product.name }} <span class="text-gray-500">x{{ item.quantity }}</span></span>
-              <span class="text-white font-medium">${{ item.subtotal }}</span>
+              <span class="text-white font-medium">€{{ item.subtotal }}</span>
             </div>
             {% endfor %}
           </div>
@@ -113,7 +105,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs text-gray-400 uppercase tracking-wide">Total</p>
-            <p class="text-2xl font-bold gradient-text">${{ order.total_price }}</p>
+            <p class="text-2xl font-bold gradient-text">€{{ order.total_price }}</p>
           </div>
           <a href="{% url 'shop:order_detail' order.order_id %}" class="px-6 py-2 bg-primary/10 text-primary border border-primary/30 rounded-lg hover:bg-primary/20 transition font-semibold text-sm">
             View Details

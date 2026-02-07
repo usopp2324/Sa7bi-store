@@ -11,9 +11,40 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, #071022 0%, #0a0a0f 60%);
+    background: radial-gradient(1200px 500px at 10% -10%, rgba(239, 68, 68, 0.18), transparent 60%),
+                radial-gradient(900px 600px at 90% 10%, rgba(59, 130, 246, 0.15), transparent 60%),
+                linear-gradient(180deg, #071022 0%, #0a0a0f 60%);
     z-index: -1;
     pointer-events: none;
+  }
+
+  .shop-orb {
+    position: fixed;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.35;
+    z-index: -1;
+    animation: orb-drift 18s ease-in-out infinite;
+  }
+
+  .shop-orb.orb-left {
+    top: 120px;
+    left: -120px;
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.6), transparent 60%);
+  }
+
+  .shop-orb.orb-right {
+    bottom: 80px;
+    right: -120px;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.6), transparent 60%);
+    animation-delay: -6s;
+  }
+
+  @keyframes orb-drift {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-18px) scale(1.05); }
   }
 
   /* Page load + reveal animations */
@@ -49,8 +80,27 @@
     position: relative;
     opacity: 0;
     transform: translateY(18px) scale(0.98);
-    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    background: linear-gradient(160deg, rgba(20, 20, 30, 0.96) 0%, rgba(10, 10, 15, 0.98) 100%);
+    border: 1px solid rgba(239, 68, 68, 0.14);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.35s ease, border-color 0.35s ease;
     will-change: transform, opacity;
+    overflow: hidden;
+  }
+
+  .product-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(480px 160px at -10% -20%, rgba(239, 68, 68, 0.22), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .product-card > * {
+    position: relative;
+    z-index: 1;
   }
 
   .product-card.is-visible {
@@ -59,8 +109,13 @@
   }
 
   .product-card:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 20px 40px rgba(239, 68, 68, 0.18);
+    transform: translateY(-8px) scale(1.015);
+    border-color: rgba(239, 68, 68, 0.45);
+    box-shadow: 0 28px 60px rgba(239, 68, 68, 0.22);
+  }
+
+  .product-card:hover::before {
+    opacity: 1;
   }
 
   .product-image img {
@@ -69,10 +124,25 @@
 
   .product-image {
     position: relative;
+    overflow: hidden;
+  }
+
+  .product-image::before {
+    content: '';
+    position: absolute;
+    inset: -10% 0 0 0;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.12) 45%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.75s ease;
+    pointer-events: none;
   }
 
   .product-card:hover .product-image img {
     transform: scale(1.05);
+  }
+
+  .product-card:hover .product-image::before {
+    transform: translateX(120%);
   }
 
   .product-card .btn-buy {
@@ -80,7 +150,7 @@
     overflow: hidden;
     opacity: 0.88;
     transform: translateY(2px);
-    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.35s ease;
   }
 
   .product-card:hover .btn-buy {
@@ -161,17 +231,127 @@
       opacity: 1;
     }
   }
+
+  .shop-hero {
+    position: relative;
+    padding: 36px 28px;
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(20, 20, 30, 0.9), rgba(10, 10, 16, 0.95));
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+  }
+
+  .shop-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px 200px at 0% 0%, rgba(239, 68, 68, 0.2), transparent 60%);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+  }
+
+  .shop-strip {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    margin-top: 28px;
+  }
+
+  .strip-card {
+    background: rgba(18, 18, 26, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .strip-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(239, 68, 68, 0.35);
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .strip-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.12);
+    display: grid;
+    place-items: center;
+    color: #f87171;
+  }
 </style>
 
 <div class="shop-background"></div>
+<div class="shop-orb orb-left"></div>
+<div class="shop-orb orb-right"></div>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 shop-page">
   <!-- Shop Header with Animation -->
-  <header class="mb-12 text-center shop-header">
-    <h1 class="text-4xl sm:text-5xl font-black mb-4">
-      Gaming <span class="gradient-text">Services Shop</span>
-    </h1>
-    <p class="text-gray-400 mt-3 max-w-2xl mx-auto text-lg">Browse our premium gaming services and level up your gaming experience</p>
+  <header class="mb-12 shop-header">
+    <div class="shop-hero">
+      <div class="relative z-10">
+        <span class="hero-pill">Elite Services</span>
+        <h1 class="text-4xl sm:text-5xl font-black mt-4">
+          Gaming <span class="gradient-text">Services Shop</span>
+        </h1>
+        <p class="text-gray-400 mt-3 max-w-2xl text-lg">Browse premium services tailored for Valorant Players. Fast delivery, transparent pricing, and curated options for Valorant specialists.</p>
+
+        <div class="shop-strip">
+          <div class="strip-card">
+            <div class="strip-icon">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Transparent pricing</p>
+              <p class="text-xs text-gray-400">No hidden fees or surprises.</p>
+            </div>
+          </div>
+          <div class="strip-card">
+            <div class="strip-icon">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Fast delivery</p>
+              <p class="text-xs text-gray-400">Quick turnaround after checkout.</p>
+            </div>
+          </div>
+          <div class="strip-card">
+            <div class="strip-icon">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Verified quality</p>
+              <p class="text-xs text-gray-400">Tested by competitive players.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 
   {% if products %}
@@ -207,7 +387,7 @@
         <div class="flex items-center justify-between pt-4 border-t border-dark-700">
           <div class="flex flex-col">
             <span class="text-xs text-gray-500 uppercase tracking-wide">Price</span>
-            <div class="text-2xl font-black gradient-text">${{ product.price }}</div>
+            <div class="text-2xl font-black gradient-text">€{{ product.price }}</div>
           </div>
           <div class="flex items-center gap-3">
             <a href="{% url 'shop:add_to_cart' product.id %}?next={% url 'shop:shop_list' %}" class="btn-buy inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white px-5 py-2 rounded-xl font-semibold hover:shadow-lg">

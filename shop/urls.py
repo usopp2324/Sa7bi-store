@@ -29,6 +29,7 @@ urlpatterns = [
     path('order/join-discord/<str:order_id>/status/', views.join_discord_status_view, name='join_discord_status'),
     path('payment/success/<str:order_id>/', views.payment_success, name='payment_success'),
     path('payment/cancel/', views.payment_cancel, name='payment_cancel'),
+    path('payment/sellauth/confirm/', views.sellauth_confirm, name='sellauth_confirm'),
     path('cash-success/', views.cash_success, name='cash_success'),
 
     # Dashboard & Orders
